@@ -2,5 +2,5 @@
 //move(), shoot()
 
 public class Tank {
-
+    System.out.println("im a dummy");
 }
