@@ -15,6 +15,7 @@ public class Main {
 	    	    if(keyCode == 'A' || keyCode == 37) a = true;
 	    	    if(keyCode == 'S' || keyCode == 40) s = true;
 	    	    if(keyCode == 'D' || keyCode == 39) d = true; 
+				if(keyCode == KeyEvent.VK_ESCAPE) //PAUSE MENU;
 	    	}
 	       	public void keyReleased(KeyEvent e) {
 	       		int keyCode = e.getKeyCode();
