@@ -4,12 +4,30 @@
 
 import java.awt.*;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 public class Main extends JFrame {
 
     int screenHeight, screenWidth;
 
     DrawingPanel drawing = new DrawingPanel();
+
+    BufferedImage sand = loadImage("Resources\\sand.png");
+    BufferedImage wall = loadImage("Resources\\wall.png");
+    BufferedImage crackedWall = loadImage("Resources\\crackedWall.png");
+
+    static BufferedImage loadImage(String filename) {
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(filename));
+        } catch (IOException e) {
+            System.out.println(filename + " failed to load");
+        }
+        return img;
+    }
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -38,8 +56,7 @@ public class Main extends JFrame {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.BLACK);
-            g.fillRect(0, 0, screenWidth - 20, screenHeight - 20);
+            g.drawImage(wall, 0, 0, 160, 160, null);
         }
     }
 
