@@ -10,23 +10,37 @@ public class Bullet {
 	double x, y;
 	double speedx = 5;
 	double speedy = 5;
-	int bounces;
+	int maxBounces;
+	int bounces = 0;
 	Rectangle hitbox;
+	Tank tank;
 
-	Bullet(double bx, double by, double xspeed, double yspeed, int bounce) {
+	Bullet(double bx, double by, double xspeed, double yspeed, int bounce, Tank tankk) {
 		x = bx;
 		y = by;
 		speedx = xspeed;
 		speedy = yspeed;
-		bounces = bounce;
+		maxBounces = bounce;
 		hitbox = new Rectangle((int) x, (int) y, WIDTH, HEIGHT);
+		tank = tankk;
 	}
 
 	public void move(int panW, int panH) {
-		if (y >= panH - HEIGHT || y <= 0)
-			speedy *= -1;
-		if (x >= panW - WIDTH || x <= 0)
-			speedx *= -1;
+		if (y >= panH - HEIGHT || y <= 0) {
+			bounces++;
+			if (bounces <= maxBounces)
+				speedy *= -1;
+			else
+				tank.bullets.remove(this);
+		}
+
+		if (x >= panW - WIDTH || x <= 0) {
+			bounces++;
+			if (bounces <= maxBounces)
+				speedx *= -1;
+			else
+				tank.bullets.remove(this);
+		}
 
 		y += speedy;
 		x += speedx;
