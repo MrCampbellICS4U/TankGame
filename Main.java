@@ -8,13 +8,21 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.Timer;
 
-public class Main extends JFrame {
+public class Main extends JFrame implements ActionListener {
 
-    final int S = 0;
-    final int H = 1;
-    final int W = 2;
-    final int C = 3;
+    final int S = 0; // sand
+    final int H = 1; // hole
+    final int W = 2; // wall
+    final int C = 3; // cracked wall
+    final int P = 4; // player
+    final int E1 = 5; // enemy 1
 
     int screenHeight, screenWidth;
 
@@ -23,23 +31,30 @@ public class Main extends JFrame {
     BufferedImage sand = loadImage("Resources\\sand.png");
     BufferedImage wall = loadImage("Resources\\wall.png");
     BufferedImage crackedWall = loadImage("Resources\\crackedWall.png");
+    BufferedImage tank1 = loadImage("Resources\\tank1.png");
 
-    int gridHeight = 10;
-    int gridWidth = 16;
+    boolean w, a, s, d;
+
+    Timer timer;
+    int TIMERSPEED = 1;
 
     int size;
 
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
-            { W, S, S, S, S, S, S, S, C, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, C, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, P, S, S, S, S, W, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, C, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, C, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
+
+    ArrayList<Wall> walls = new ArrayList<Wall>();
+
+    Tank player;
 
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
@@ -71,9 +86,41 @@ public class Main extends JFrame {
         screenWidth = getWidth();
         add(drawing);
         drawing.setBounds(0, 0, screenWidth, screenHeight);
-        size = screenHeight / gridHeight;
-        if (size > screenWidth / gridWidth)
-            size = screenWidth / gridWidth;
+        size = screenHeight / grid.length;
+        if (size > screenWidth / grid[0].length)
+            size = screenWidth / grid[0].length;
+
+        this.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyChar();
+                if (keyCode == 'w')
+                    w = true;
+                if (keyCode == 'a')
+                    a = true;
+                if (keyCode == 's')
+                    s = true;
+                if (keyCode == 'd')
+                    d = true;
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    System.exit(0); // PAUSE MENU
+            }
+
+            public void keyReleased(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                if (keyCode == 'w')
+                    w = false;
+                if (keyCode == 'a')
+                    a = false;
+                if (keyCode == 's')
+                    s = false;
+                if (keyCode == 'd')
+                    d = false;
+            }
+        });
+
+        timer = new Timer(TIMERSPEED, this);
+        timer.start();
+
     }
 
     private class DrawingPanel extends JPanel {
@@ -81,20 +128,28 @@ public class Main extends JFrame {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int y = 0; y < gridHeight; y++) {
-                for (int x = 0; x < gridWidth; x++) {
+            for (int y = 0; y < grid.length; y++) {
+                for (int x = 0; x < grid[0].length; x++) {
                     switch (grid[y][x]) {
                         case S:
                             g.drawImage(sand, x * size, y * size, size, size, null);
                             break;
                         case H:
                             g.drawImage(sand, x * size, y * size, size, size, null);
+                            walls.add(new Wall(x * size, y * size, size, size, H));
                             break;
                         case W:
                             g.drawImage(wall, x * size, y * size, size, size, null);
+                            walls.add(new Wall(x * size, y * size, size, size, W));
                             break;
                         case C:
                             g.drawImage(crackedWall, x * size, y * size, size, size, null);
+                            walls.add(new Wall(x * size, y * size, size, size, C));
+                            break;
+                        case P:
+                            g.drawImage(sand, x * size, y * size, size, size, null);
+                            if (player == null)
+                                player = new Tank(x * size, y * size, 1, 5);
                             break;
                         default:
                             System.out.println("ERROR - Map load error");
@@ -102,8 +157,14 @@ public class Main extends JFrame {
 
                 }
             }
-
+            g.drawImage(tank1, (int) player.x, (int) player.y, size, size, null);
         }
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (w)
+            player.x += 5;
+        drawing.repaint();
+    }
 }
