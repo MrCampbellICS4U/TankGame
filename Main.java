@@ -11,6 +11,11 @@ import java.io.IOException;
 
 public class Main extends JFrame {
 
+    final int S = 0;
+    final int H = 1;
+    final int W = 2;
+    final int C = 3;
+
     int screenHeight, screenWidth;
 
     DrawingPanel drawing = new DrawingPanel();
@@ -18,6 +23,23 @@ public class Main extends JFrame {
     BufferedImage sand = loadImage("Resources\\sand.png");
     BufferedImage wall = loadImage("Resources\\wall.png");
     BufferedImage crackedWall = loadImage("Resources\\crackedWall.png");
+
+    int gridHeight = 10;
+    int gridWidth = 16;
+
+    int size;
+
+    int[][] grid = {
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
+            { W, S, S, S, S, S, S, S, C, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, C, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
 
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
@@ -49,6 +71,9 @@ public class Main extends JFrame {
         screenWidth = getWidth();
         add(drawing);
         drawing.setBounds(0, 0, screenWidth, screenHeight);
+        size = screenHeight / gridHeight;
+        if (size > screenWidth / gridWidth)
+            size = screenWidth / gridWidth;
     }
 
     private class DrawingPanel extends JPanel {
@@ -56,7 +81,28 @@ public class Main extends JFrame {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.drawImage(wall, 0, 0, 160, 160, null);
+            for (int y = 0; y < gridHeight; y++) {
+                for (int x = 0; x < gridWidth; x++) {
+                    switch (grid[y][x]) {
+                        case S:
+                            g.drawImage(sand, x * size, y * size, size, size, null);
+                            break;
+                        case H:
+                            g.drawImage(sand, x * size, y * size, size, size, null);
+                            break;
+                        case W:
+                            g.drawImage(wall, x * size, y * size, size, size, null);
+                            break;
+                        case C:
+                            g.drawImage(crackedWall, x * size, y * size, size, size, null);
+                            break;
+                        default:
+                            System.out.println("ERROR - Map load error");
+                    }
+
+                }
+            }
+
         }
     }
 
