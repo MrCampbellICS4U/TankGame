@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.Timer;
 
 public class Main extends JFrame implements ActionListener {
 
@@ -28,11 +27,11 @@ public class Main extends JFrame implements ActionListener {
 
     DrawingPanel drawing = new DrawingPanel();
 
-    BufferedImage sand = loadImage("Resources\\sand.png");
-    BufferedImage hole = loadImage("Resources\\hole.png");
-    BufferedImage wall = loadImage("Resources\\wall.png");
-    BufferedImage crackedWall = loadImage("Resources\\crackedWall.png");
-    BufferedImage tank1 = loadImage("Resources\\tank1.png");
+    Image sand;
+    Image hole;
+    Image wall;
+    Image crackedWall;
+    Image tank1;;
 
     boolean w, a, s, d;
 
@@ -91,6 +90,12 @@ public class Main extends JFrame implements ActionListener {
         if (size > screenWidth / grid[0].length)
             size = screenWidth / grid[0].length;
 
+        sand = loadImage("Resources\\sand.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        hole = loadImage("Resources\\hole.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        wall = loadImage("Resources\\wall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        crackedWall = loadImage("Resources\\crackedWall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        tank1 = loadImage("Resources\\tank1.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyChar();
@@ -133,22 +138,22 @@ public class Main extends JFrame implements ActionListener {
                 for (int x = 0; x < grid[0].length; x++) {
                     switch (grid[y][x]) {
                         case S:
-                            g.drawImage(sand, x * size, y * size, size, size, null);
+                            g.drawImage(sand, x * size, y * size, null);
                             break;
                         case H:
-                            g.drawImage(hole, x * size, y * size, size, size, null);
+                            g.drawImage(hole, x * size, y * size, null);
                             walls.add(new Wall(x * size, y * size, size, size, H));
                             break;
                         case W:
-                            g.drawImage(wall, x * size, y * size, size, size, null);
+                            g.drawImage(wall, x * size, y * size, null);
                             walls.add(new Wall(x * size, y * size, size, size, W));
                             break;
                         case C:
-                            g.drawImage(crackedWall, x * size, y * size, size, size, null);
+                            g.drawImage(crackedWall, x * size, y * size, null);
                             walls.add(new Wall(x * size, y * size, size, size, C));
                             break;
                         case P:
-                            g.drawImage(sand, x * size, y * size, size, size, null);
+                            g.drawImage(sand, x * size, y * size, null);
                             if (player == null)
                                 player = new Tank(x * size, y * size, 1, 5);
                             break;
@@ -158,7 +163,7 @@ public class Main extends JFrame implements ActionListener {
 
                 }
             }
-            g.drawImage(tank1, (int) player.x, (int) player.y, size, size, null);
+            g.drawImage(tank1, (int) player.x, (int) player.y, null);
         }
     }
 
