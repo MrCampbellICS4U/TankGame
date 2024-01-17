@@ -26,7 +26,10 @@ public class Main extends JFrame implements ActionListener {
 
     int screenHeight, screenWidth;
 
-    DrawingPanel drawing = new DrawingPanel();
+    Background background = new Background();
+    Foreground foreground = new Foreground();
+
+    JLayeredPane onion = new JLayeredPane();
 
     BufferedImage sand = loadImage("Resources\\sand.png");
     BufferedImage hole = loadImage("Resources\\hole.png");
@@ -35,6 +38,7 @@ public class Main extends JFrame implements ActionListener {
     BufferedImage tank1 = loadImage("Resources\\tank1.png");
 
     boolean w, a, s, d;
+    boolean repaint = true;
 
     Timer timer;
     int TIMERSPEED = 1;
@@ -85,8 +89,15 @@ public class Main extends JFrame implements ActionListener {
         setVisible(true);
         screenHeight = getHeight();
         screenWidth = getWidth();
-        add(drawing);
-        drawing.setBounds(0, 0, screenWidth, screenHeight);
+        add(onion);
+        onion.setBounds(0, 0, screenWidth, screenHeight);
+        onion.setOpaque(false);
+        onion.add(background, 1);
+        background.setBounds(0, 0, screenWidth, screenHeight);
+        background.setOpaque(false);
+        onion.add(foreground, 0);
+        foreground.setBounds(0, 0, screenWidth, screenHeight);
+        foreground.setOpaque(false);
         size = screenHeight / grid.length;
         if (size > screenWidth / grid[0].length)
             size = screenWidth / grid[0].length;
@@ -124,40 +135,51 @@ public class Main extends JFrame implements ActionListener {
 
     }
 
-    private class DrawingPanel extends JPanel {
+    private class Background extends JPanel {
+
+        @Override
+        public void paintComponent(Graphics g) {
+            if (repaint) {
+                super.paintComponent(g);
+                for (int y = 0; y < grid.length; y++) {
+                    for (int x = 0; x < grid[0].length; x++) {
+                        switch (grid[y][x]) {
+                            case S:
+                                g.drawImage(sand, x * size, y * size, size, size, null);
+                                break;
+                            case H:
+                                g.drawImage(hole, x * size, y * size, size, size, null);
+                                walls.add(new Wall(x * size, y * size, size, size, H));
+                                break;
+                            case W:
+                                g.drawImage(wall, x * size, y * size, size, size, null);
+                                walls.add(new Wall(x * size, y * size, size, size, W));
+                                break;
+                            case C:
+                                g.drawImage(crackedWall, x * size, y * size, size, size, null);
+                                walls.add(new Wall(x * size, y * size, size, size, C));
+                                break;
+                            case P:
+                                g.drawImage(sand, x * size, y * size, size, size, null);
+                                if (player == null)
+                                    player = new Tank(x * size, y * size, 1, 5);
+                                break;
+                            default:
+                                System.out.println("ERROR - Map load error");
+                        }
+
+                    }
+                }
+                repaint = true;
+            }
+        }
+    }
+
+    private class Foreground extends JPanel {
 
         @Override
         public void paintComponent(Graphics g) {
             // super.paintComponent(g);
-            for (int y = 0; y < grid.length; y++) {
-                for (int x = 0; x < grid[0].length; x++) {
-                    switch (grid[y][x]) {
-                        case S:
-                            g.drawImage(sand, x * size, y * size, size, size, null);
-                            break;
-                        case H:
-                            g.drawImage(hole, x * size, y * size, size, size, null);
-                            walls.add(new Wall(x * size, y * size, size, size, H));
-                            break;
-                        case W:
-                            g.drawImage(wall, x * size, y * size, size, size, null);
-                            walls.add(new Wall(x * size, y * size, size, size, W));
-                            break;
-                        case C:
-                            g.drawImage(crackedWall, x * size, y * size, size, size, null);
-                            walls.add(new Wall(x * size, y * size, size, size, C));
-                            break;
-                        case P:
-                            g.drawImage(sand, x * size, y * size, size, size, null);
-                            if (player == null)
-                                player = new Tank(x * size, y * size, 1, 5);
-                            break;
-                        default:
-                            System.out.println("ERROR - Map load error");
-                    }
-
-                }
-            }
             g.drawImage(tank1, (int) player.x, (int) player.y, size, size, null);
         }
     }
@@ -172,6 +194,7 @@ public class Main extends JFrame implements ActionListener {
             player.y += size / 10;
         if (d)
             player.x += size / 10;
-        repaint(0, (int) player.x - size / 10, (int) player.y - size / 10, size + size / 5 + 1, size + size / 5 + 1);
+        foreground.repaint();
+        background.repaint();
     }
 }
