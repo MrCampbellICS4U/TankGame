@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Main extends JFrame implements ActionListener {
 
@@ -43,11 +45,11 @@ public class Main extends JFrame implements ActionListener {
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, S, P, S, S, S, S, W, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, C, S, S, S, S, H, S, S, W },
-            { W, S, S, S, S, S, S, C, S, S, S, H, H, S, S, W },
-            { W, S, S, S, S, S, S, H, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, C, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, W, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, H, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, W, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
@@ -55,6 +57,8 @@ public class Main extends JFrame implements ActionListener {
     ArrayList<Wall> walls = new ArrayList<Wall>();
 
     Tank player;
+
+    double slope;
 
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
@@ -124,6 +128,17 @@ public class Main extends JFrame implements ActionListener {
             }
         });
 
+        this.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    slope = e.getX() - player.x / e.getY() - player.y;
+                    player.shoot(e.getX() - player.x, e.getY() - player.y);
+                }
+                if (e.getButton() == MouseEvent.BUTTON3) // bomb();
+                    System.out.println("bomb");
+            }
+        });
+
         timer = new Timer(TIMERSPEED, this);
         timer.start();
 
@@ -133,7 +148,8 @@ public class Main extends JFrame implements ActionListener {
 
         @Override
         public void paintComponent(Graphics g) {
-            // super.paintComponent(g);
+            g.setColor(Color.black);
+            super.paintComponent(g);
             for (int y = 0; y < grid.length; y++) {
                 for (int x = 0; x < grid[0].length; x++) {
                     switch (grid[y][x]) {
@@ -155,7 +171,7 @@ public class Main extends JFrame implements ActionListener {
                         case P:
                             g.drawImage(sand, x * size, y * size, null);
                             if (player == null)
-                                player = new Tank(x * size, y * size, 1, 5);
+                                player = new Tank(x * size, y * size, size, size, 1, 5);
                             break;
                         default:
                             System.out.println("ERROR - Map load error");
@@ -163,20 +179,38 @@ public class Main extends JFrame implements ActionListener {
 
                 }
             }
+            for (Bullet b : player.bullets) {
+                g.fillRect((int) b.x, (int) b.y, b.width, b.height);
+            }
+
             g.drawImage(tank1, (int) player.x, (int) player.y, null);
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (w)
-            player.y -= size / 10;
-        if (a)
-            player.x -= size / 10;
-        if (s)
-            player.y += size / 10;
-        if (d)
-            player.x += size / 10;
-        repaint(0, (int) player.x - size / 10, (int) player.y - size / 10, size + size / 5 + 1, size + size / 5 + 1);
+        for (Bullet b : player.bullets) {
+            b.move();
+        }
+        if (w) {
+            System.out.println("w");
+            if (a)
+                player.move(size / 30 * -1, size / 30 * -1);
+            else if (d)
+                player.move(size / 30, size / 30 * -1);
+            else
+                player.move(0, size / 15 * -1);
+        } else if (s) {
+            if (a)
+                player.move(size / 30 * -1, size / 30);
+            else if (d)
+                player.move(size / 30, size / 30);
+            else
+                player.move(0, size / 15);
+        } else if (a)
+            player.move(size / 15 * -1, 0);
+        else if (d)
+            player.move(size / 15, 0);
+        repaint();
     }
 }
