@@ -29,6 +29,7 @@ public class Main extends JFrame implements ActionListener {
     DrawingPanel drawing = new DrawingPanel();
 
     BufferedImage sand = loadImage("Resources\\sand.png");
+    BufferedImage hole = loadImage("Resources\\hole.png");
     BufferedImage wall = loadImage("Resources\\wall.png");
     BufferedImage crackedWall = loadImage("Resources\\crackedWall.png");
     BufferedImage tank1 = loadImage("Resources\\tank1.png");
@@ -44,9 +45,9 @@ public class Main extends JFrame implements ActionListener {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, P, S, S, S, S, W, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, C, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, C, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, C, S, S, S, S, H, S, S, W },
+            { W, S, S, S, S, S, S, C, S, S, S, H, H, S, S, W },
+            { W, S, S, S, S, S, S, H, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -106,7 +107,7 @@ public class Main extends JFrame implements ActionListener {
             }
 
             public void keyReleased(KeyEvent e) {
-                int keyCode = e.getKeyCode();
+                int keyCode = e.getKeyChar();
                 if (keyCode == 'w')
                     w = false;
                 if (keyCode == 'a')
@@ -127,7 +128,7 @@ public class Main extends JFrame implements ActionListener {
 
         @Override
         public void paintComponent(Graphics g) {
-            super.paintComponent(g);
+            // super.paintComponent(g);
             for (int y = 0; y < grid.length; y++) {
                 for (int x = 0; x < grid[0].length; x++) {
                     switch (grid[y][x]) {
@@ -135,7 +136,7 @@ public class Main extends JFrame implements ActionListener {
                             g.drawImage(sand, x * size, y * size, size, size, null);
                             break;
                         case H:
-                            g.drawImage(sand, x * size, y * size, size, size, null);
+                            g.drawImage(hole, x * size, y * size, size, size, null);
                             walls.add(new Wall(x * size, y * size, size, size, H));
                             break;
                         case W:
@@ -164,7 +165,13 @@ public class Main extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (w)
-            player.x += 5;
-        drawing.repaint();
+            player.y -= size / 10;
+        if (a)
+            player.x -= size / 10;
+        if (s)
+            player.y += size / 10;
+        if (d)
+            player.x += size / 10;
+        repaint(0, (int) player.x - size / 10, (int) player.y - size / 10, size + size / 5 + 1, size + size / 5 + 1);
     }
 }
