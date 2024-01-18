@@ -15,6 +15,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.Math;
 
 public class Main extends JFrame implements ActionListener {
 
@@ -58,7 +59,8 @@ public class Main extends JFrame implements ActionListener {
 
     Tank player;
 
-    double slope;
+    double length;
+    double dx, dy;
 
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
@@ -131,8 +133,9 @@ public class Main extends JFrame implements ActionListener {
         this.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    slope = e.getX() - player.x / e.getY() - player.y;
-                    player.shoot(e.getX() - player.x, e.getY() - player.y);
+                    length = Math.sqrt((e.getX() - player.x) * (e.getX() - player.x)
+                            + (e.getY() - player.y) * (e.getY() - player.y));
+                    player.shoot((e.getX() - player.x) / length * 5, (e.getY() - player.y) / length * 5);
                 }
                 if (e.getButton() == MouseEvent.BUTTON3) // bomb();
                     System.out.println("bomb");
@@ -148,7 +151,7 @@ public class Main extends JFrame implements ActionListener {
 
         @Override
         public void paintComponent(Graphics g) {
-            g.setColor(Color.black);
+            g.setColor(Color.WHITE);
             super.paintComponent(g);
             for (int y = 0; y < grid.length; y++) {
                 for (int x = 0; x < grid[0].length; x++) {
@@ -192,25 +195,36 @@ public class Main extends JFrame implements ActionListener {
         for (Bullet b : player.bullets) {
             b.move();
         }
+        dx = 0;
+        dy = 0;
         if (w) {
-            System.out.println("w");
-            if (a)
-                player.move(size / 30 * -1, size / 30 * -1);
-            else if (d)
-                player.move(size / 30, size / 30 * -1);
-            else
-                player.move(0, size / 15 * -1);
+            if (a) {
+                dx = -size / 30;
+                dy = -size / 30;
+            } else if (d) {
+                dx = size / 30;
+                dy = -size / 30;
+            } else
+                dy = -size / 20;
         } else if (s) {
-            if (a)
-                player.move(size / 30 * -1, size / 30);
-            else if (d)
-                player.move(size / 30, size / 30);
-            else
-                player.move(0, size / 15);
+            if (a) {
+                dx = -size / 30;
+                dy = size / 30;
+            } else if (d) {
+                dx = size / 30;
+                dy = size / 30;
+            } else
+                dy = size / 20;
         } else if (a)
-            player.move(size / 15 * -1, 0);
+            dx = -size / 20;
         else if (d)
-            player.move(size / 15, 0);
+            dx = size / 20;
+        player.move(dx, dy);
+        for (Wall w : walls) {
+            if (w.contains(player.x, player.y)) {
+
+            }
+        }
         repaint();
     }
 }

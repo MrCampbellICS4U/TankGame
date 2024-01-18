@@ -24,11 +24,11 @@ public class Tank extends Rectangle {
      */
     public void shoot(double dx, double dy) {
         // if (bullets.size() < max) {
-        bullets.add(new Bullet(x, y, dx, dy, bounces, this));
+        bullets.add(new Bullet(x, y, dx, dy, width / 5, height / 5, bounces, this));
         // }
     }
 
-    public void move(int dx, int dy) {
+    public void move(double dx, double dy) {
         x += dx;
         y += dy;
         super.x = (int) x;

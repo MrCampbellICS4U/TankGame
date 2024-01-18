@@ -3,14 +3,12 @@
 import java.awt.Rectangle;
 
 public class Bullet extends Rectangle {
-    final static int WIDTH = 10;
-    final static int HEIGHT = 10;
     double x, y, dx, dy;
     int bounces;
     Tank tank;
 
-    Bullet(double x, double y, double dx, double dy, int bounces, Tank tank) {
-        super((int) x, (int) y, WIDTH, HEIGHT);
+    Bullet(double x, double y, double dx, double dy, int width, int height, int bounces, Tank tank) {
+        super((int) x, (int) y, width, height);
         this.x = x;
         this.y = y;
         this.dx = dx;
