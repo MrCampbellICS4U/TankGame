@@ -25,6 +25,12 @@ public class Main extends JFrame implements ActionListener {
     final int P = 4; // player
     final int E1 = 5; // enemy 1
 
+    Color darkSand = new Color(246, 212, 116);
+    Color lightSand = new Color (244, 217, 127);
+    Color normSand = new Color(244, 215, 119);
+
+    // int[][] sandTile {};
+
     int screenHeight, screenWidth;
 
     DrawingPanel drawing = new DrawingPanel();
@@ -77,7 +83,9 @@ public class Main extends JFrame implements ActionListener {
             }
         });
     }
+    public void drawSand(){
 
+    }
     Main() {
         setTitle("Tank Game");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -117,14 +125,10 @@ public class Main extends JFrame implements ActionListener {
 
             public void keyReleased(KeyEvent e) {
                 int keyCode = e.getKeyChar();
-                if (keyCode == 'w')
-                    w = false;
-                if (keyCode == 'a')
-                    a = false;
-                if (keyCode == 's')
-                    s = false;
-                if (keyCode == 'd')
-                    d = false;
+                if (keyCode == 'w')w = false;
+                if (keyCode == 'a')a = false;
+                if (keyCode == 's') s = false;
+                if (keyCode == 'd') d = false;
             }
         });
 
@@ -150,35 +154,36 @@ public class Main extends JFrame implements ActionListener {
         public void paintComponent(Graphics g) {
             g.setColor(Color.black);
             super.paintComponent(g);
-            for (int y = 0; y < grid.length; y++) {
-                for (int x = 0; x < grid[0].length; x++) {
-                    switch (grid[y][x]) {
-                        case S:
-                            g.drawImage(sand, x * size, y * size, null);
-                            break;
-                        case H:
-                            g.drawImage(hole, x * size, y * size, null);
-                            walls.add(new Wall(x * size, y * size, size, size, H));
-                            break;
-                        case W:
-                            g.drawImage(wall, x * size, y * size, null);
-                            walls.add(new Wall(x * size, y * size, size, size, W));
-                            break;
-                        case C:
-                            g.drawImage(crackedWall, x * size, y * size, null);
-                            walls.add(new Wall(x * size, y * size, size, size, C));
-                            break;
-                        case P:
-                            g.drawImage(sand, x * size, y * size, null);
-                            if (player == null)
-                                player = new Tank(x * size, y * size, size, size, 1, 5);
-                            break;
-                        default:
-                            System.out.println("ERROR - Map load error");
-                    }
+                for (int y = 0; y < grid.length; y++) {
+                    for (int x = 0; x < grid[0].length; x++) {
+                        switch (grid[y][x]) {
+                            case S:
+                                g.drawImage(sand, x * size, y * size, null);
+                                break;
+                            case H:
+                                g.drawImage(hole, x * size, y * size, null);
+                                walls.add(new Wall(x * size, y * size, size, size, H));
+                                break;
+                            case W:
+                                g.drawImage(wall, x * size, y * size, null);
+                                walls.add(new Wall(x * size, y * size, size, size, W));
+                                break;
+                            case C:
+                                g.drawImage(crackedWall, x * size, y * size, null);
+                                walls.add(new Wall(x * size, y * size, size, size, C));
+                                break;
+                            case P:
+                                g.drawImage(sand, x * size, y * size, null);
+                                if (player == null)
+                                    player = new Tank(x * size, y * size, size, size, 1, 5);
+                                break;
+                            default:
+                                System.out.println("ERROR - Map load error");
+                        }
 
+                    }
                 }
-            }
+
             for (Bullet b : player.bullets) {
                 g.fillRect((int) b.x, (int) b.y, b.width, b.height);
             }
@@ -199,18 +204,18 @@ public class Main extends JFrame implements ActionListener {
             else if (d)
                 player.move(size / 30, size / 30 * -1);
             else
-                player.move(0, size / 15 * -1);
+                player.move(0, size / 20 * -1);
         } else if (s) {
             if (a)
                 player.move(size / 30 * -1, size / 30);
             else if (d)
                 player.move(size / 30, size / 30);
             else
-                player.move(0, size / 15);
+                player.move(0, size / 20);
         } else if (a)
-            player.move(size / 15 * -1, 0);
+            player.move(size / 20 * -1, 0);
         else if (d)
-            player.move(size / 15, 0);
+            player.move(size / 20, 0);
         repaint();
     }
 }
