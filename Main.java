@@ -34,13 +34,16 @@ public class Main extends JFrame implements ActionListener {
     Image wall;
     Image crackedWall;
     Image tank1;;
-
+    Image bomb;
+    Image bombred;
     boolean w, a, s, d;
-
+    
     Timer timer;
     int TIMERSPEED = 1;
-
+    int bombCount = 0;
+    int maxBombs = 2;
     int size;
+    double xb,xy;
 
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
@@ -99,7 +102,8 @@ public class Main extends JFrame implements ActionListener {
         wall = loadImage("Resources\\wall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         crackedWall = loadImage("Resources\\crackedWall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         tank1 = loadImage("Resources\\tank1.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
-
+        bomb = loadImage("Resources\\bomb.png").getScaledInstance(size/2, size/2, Image.SCALE_DEFAULT);
+        bombred = loadImage("Resources\\bombred.png").getScaledInstance(size/2, size/2, Image.SCALE_DEFAULT);
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyChar();
@@ -136,6 +140,15 @@ public class Main extends JFrame implements ActionListener {
                 }
                 if (e.getButton() == MouseEvent.BUTTON3) // bomb();
                     System.out.println("bomb");
+                    xb = player.x;
+                    xy = player.y;
+                    
+                    if(bombCount <= maxBombs){
+                        player.bombs.add (new Bomb(player.x, player.y));
+                        bombCount ++;
+                }
+            
+
             }
         });
 
@@ -180,10 +193,31 @@ public class Main extends JFrame implements ActionListener {
                 }
             }
             for (Bullet b : player.bullets) {
+               
                 g.fillRect((int) b.x, (int) b.y, b.width, b.height);
             }
-
             g.drawImage(tank1, (int) player.x, (int) player.y, null);
+
+            
+            for(Bomb b: player.bombs){
+                if (b.bombTick <= 300 )g.drawImage(bomb,(int) b.x, (int) b.y, null);
+                if (b.bombTick >= 300 ){
+                    if (b.bombTick >= 300 && b.bombTick <= 325)g.drawImage(bombred,(int) b.x, (int) b.y, null);
+                    if (b.bombTick >= 325 && b.bombTick <= 350)g.drawImage(bomb,(int) b.x, (int) b.y, null);
+                    if (b.bombTick >= 350 && b.bombTick <= 375)g.drawImage(bombred,(int) b.x, (int) b.y, null);
+                    if (b.bombTick >= 375 && b.bombTick <= 400)g.drawImage(bomb,(int) b.x, (int) b.y, null);
+                    if (b.bombTick >= 400 && b.bombTick <= 425)g.drawImage(bombred,(int) b.x, (int) b.y, null);
+                    if (b.bombTick >= 425 && b.bombTick <= 450)g.drawImage(bomb,(int) b.x, (int) b.y, null);
+                    if (b.bombTick >= 450 && b.bombTick <= 475)g.drawImage(bombred,(int) b.x, (int) b.y, null);
+                    if (b.bombTick >= 475 && b.bombTick <= 500)g.drawImage(bomb,(int) b.x, (int) b.y, null); 
+                    if (b.bombTick == 501) bombCount --; 
+                    if (b.bombTick >= 501 && b.bombTick <= 505) g.fillRect((int) b.x, (int) b.y, 100, 100);
+                    
+                }
+             
+            }
+           
+           
         }
     }
 
@@ -191,6 +225,9 @@ public class Main extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         for (Bullet b : player.bullets) {
             b.move();
+        }
+        for (Bomb b : player.bombs) {
+            b.bombTick ++;
         }
         if (w) {
             System.out.println("w");
