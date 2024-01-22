@@ -24,7 +24,7 @@ public class Main extends JFrame implements ActionListener {
     final int W = 2; // wall
     final int C = 3; // cracked wall
     final int P = 4; // player
-    final int E1 = 5; // enemy 1
+    final int E = 5; // enemy
 
     int screenHeight, screenWidth;
 
@@ -34,7 +34,8 @@ public class Main extends JFrame implements ActionListener {
     Image hole;
     Image wall;
     Image crackedWall;
-    Image tank1;;
+    Image tank;
+    Image enemyTank;
 
     boolean w, a, s, d;
 
@@ -46,21 +47,23 @@ public class Main extends JFrame implements ActionListener {
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, C, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, W, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, H, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, W, S, S, S, S, S, S, W },
+            { W, S, P, S, S, S, S, S, S, S, S, S, S, E, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
 
     ArrayList<Wall> walls = new ArrayList<Wall>();
 
+    ArrayList<Tank> tanks = new ArrayList<Tank>();
+
     Tank player;
 
     double length;
-    double dx, dy;
+    double dx, dy, speed, speed2;
 
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
@@ -95,12 +98,15 @@ public class Main extends JFrame implements ActionListener {
         size = screenHeight / grid.length;
         if (size > screenWidth / grid[0].length)
             size = screenWidth / grid[0].length;
+        speed = size / 20;
+        speed2 = speed / Math.sqrt(speed * speed + speed * speed) * speed;
 
         sand = loadImage("Resources\\sand.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         hole = loadImage("Resources\\hole.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         wall = loadImage("Resources\\wall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         crackedWall = loadImage("Resources\\crackedWall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
-        tank1 = loadImage("Resources\\tank1.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        tank = loadImage("Resources\\tank.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        enemyTank = loadImage("Resources\\enemyTank.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
 
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
@@ -137,8 +143,8 @@ public class Main extends JFrame implements ActionListener {
                             + (e.getY() - player.y) * (e.getY() - player.y));
                     player.shoot((e.getX() - player.x) / length * 5, (e.getY() - player.y) / length * 5);
                 }
-                if (e.getButton() == MouseEvent.BUTTON3) // bomb();
-                    System.out.println("bomb");
+                if (e.getButton() == MouseEvent.BUTTON3)
+                    System.out.println(); // bomb();
             }
         });
 
@@ -176,17 +182,27 @@ public class Main extends JFrame implements ActionListener {
                             if (player == null)
                                 player = new Tank(x * size, y * size, size, size, 1, 5);
                             break;
+                        case E:
+                            g.drawImage(sand, x * size, y * size, null);
+                            tanks.add(new Tank(x * size, y * size, size, size, 1, 3));
+                            break;
                         default:
                             System.out.println("ERROR - Map load error");
                     }
 
                 }
             }
+
+            for (Tank t : tanks) {
+                g.drawImage(enemyTank, (int) t.x, (int) t.y, null);
+                for (Bullet b : t.bullets) {
+                    g.fillRect((int) b.x, (int) b.y, b.width, b.height);
+                }
+            }
             for (Bullet b : player.bullets) {
                 g.fillRect((int) b.x, (int) b.y, b.width, b.height);
             }
-
-            g.drawImage(tank1, (int) player.x, (int) player.y, null);
+            g.drawImage(tank, (int) player.x, (int) player.y, null);
         }
     }
 
@@ -199,26 +215,26 @@ public class Main extends JFrame implements ActionListener {
         dy = 0;
         if (w) {
             if (a) {
-                dx = -size / 30;
-                dy = -size / 30;
+                dx = -speed2;
+                dy = -speed2;
             } else if (d) {
-                dx = size / 30;
-                dy = -size / 30;
+                dx = speed2;
+                dy = -speed2;
             } else
-                dy = -size / 20;
+                dy = -speed;
         } else if (s) {
             if (a) {
-                dx = -size / 30;
-                dy = size / 30;
+                dx = -speed2;
+                dy = speed2;
             } else if (d) {
-                dx = size / 30;
-                dy = size / 30;
+                dx = speed2;
+                dy = speed2;
             } else
-                dy = size / 20;
+                dy = speed;
         } else if (a)
-            dx = -size / 20;
+            dx = -speed;
         else if (d)
-            dx = size / 20;
+            dx = speed;
         player.move(dx, dy);
         for (Wall w : walls) {
             if (w.contains(player.x, player.y)) {
