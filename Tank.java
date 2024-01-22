@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class Tank extends Rectangle {
-
+    ArrayList<Bomb> bombs = new ArrayList<Bomb>();
     ArrayList<Bullet> bullets = new ArrayList<Bullet>();
     double x, y;
     int bounces;

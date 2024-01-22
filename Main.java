@@ -36,6 +36,13 @@ public class Main extends JFrame implements ActionListener {
     Image tank1;;
     Image bomb;
     Image bombred;
+    Image explosion1;
+    Image explosion2;
+    Image explosion3;
+    Image explosion4;
+    Image explosion5;
+    Image explosion6;
+    Image explosion7;
     boolean w, a, s, d;
     
     Timer timer;
@@ -104,6 +111,15 @@ public class Main extends JFrame implements ActionListener {
         tank1 = loadImage("Resources\\tank1.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         bomb = loadImage("Resources\\bomb.png").getScaledInstance(size/2, size/2, Image.SCALE_DEFAULT);
         bombred = loadImage("Resources\\bombred.png").getScaledInstance(size/2, size/2, Image.SCALE_DEFAULT);
+        explosion1 = loadImage("Resources\\explosion1adj.png").getScaledInstance(3*size, 3*size, Image.SCALE_DEFAULT);
+        explosion2 = loadImage("Resources\\explosion2adj.png").getScaledInstance(3*size, 3*size, Image.SCALE_DEFAULT);
+        explosion3 = loadImage("Resources\\explosion3adj.png").getScaledInstance(3*size, 3*size, Image.SCALE_DEFAULT);
+        explosion4 = loadImage("Resources\\explosion4adj.png").getScaledInstance(3*size, 3*size, Image.SCALE_DEFAULT);
+        explosion5 = loadImage("Resources\\explosion5adj.png").getScaledInstance(3*size, 3*size, Image.SCALE_DEFAULT);
+        explosion6 = loadImage("Resources\\explosion6adj.png").getScaledInstance(3*size, 3*size, Image.SCALE_DEFAULT);
+        explosion7 = loadImage("Resources\\explosion7adj.png").getScaledInstance(3*size, 3*size, Image.SCALE_DEFAULT);
+        
+
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyChar();
@@ -138,16 +154,15 @@ public class Main extends JFrame implements ActionListener {
                     slope = e.getX() - player.x / e.getY() - player.y;
                     player.shoot(e.getX() - player.x, e.getY() - player.y);
                 }
-                if (e.getButton() == MouseEvent.BUTTON3) // bomb();
-                    System.out.println("bomb");
+                if (e.getButton() == MouseEvent.BUTTON3){ // bomb();
                     xb = player.x;
                     xy = player.y;
-                    
+           
                     if(bombCount <= maxBombs){
                         player.bombs.add (new Bomb(player.x, player.y));
                         bombCount ++;
                 }
-            
+            }
 
             }
         });
@@ -210,9 +225,14 @@ public class Main extends JFrame implements ActionListener {
                     if (b.bombTick >= 425 && b.bombTick <= 450)g.drawImage(bomb,(int) b.x, (int) b.y, null);
                     if (b.bombTick >= 450 && b.bombTick <= 475)g.drawImage(bombred,(int) b.x, (int) b.y, null);
                     if (b.bombTick >= 475 && b.bombTick <= 500)g.drawImage(bomb,(int) b.x, (int) b.y, null); 
-                    if (b.bombTick == 501) bombCount --; 
-                    if (b.bombTick >= 501 && b.bombTick <= 505) g.fillRect((int) b.x, (int) b.y, 100, 100);
-                    
+                    if (b.bombTick == 501) bombCount--;
+                    if (b.bombTick >= 501 && b.bombTick <= 505) g.drawImage(explosion1,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    if (b.bombTick >= 505 && b.bombTick <= 510) g.drawImage(explosion2,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    if (b.bombTick >= 510 && b.bombTick <= 515) g.drawImage(explosion3,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    if (b.bombTick >= 515 && b.bombTick <= 520) g.drawImage(explosion4,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    if (b.bombTick >= 520 && b.bombTick <= 525) g.drawImage(explosion5,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    if (b.bombTick >= 525 && b.bombTick <= 530) g.drawImage(explosion6,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    if (b.bombTick >= 535 && b.bombTick <= 540) g.drawImage(explosion7,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
                 }
              
             }
@@ -228,7 +248,13 @@ public class Main extends JFrame implements ActionListener {
         }
         for (Bomb b : player.bombs) {
             b.bombTick ++;
+            if ( player.x- b.x == size*3/4 && player.x- b.x == -size*3/4 &&  player.y- b.y == size*3/4){
+                System.out.println("dead");
+            }
         }
+        
+               
+            
         if (w) {
             System.out.println("w");
             if (a)
