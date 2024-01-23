@@ -59,6 +59,7 @@ public class Main extends JFrame implements ActionListener {
     static int size;
     int angle;
 
+    //Game Layout
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, C, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -86,6 +87,8 @@ public class Main extends JFrame implements ActionListener {
 
     Random random = new Random();
 
+
+    //Load Images
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
         try {
@@ -96,6 +99,8 @@ public class Main extends JFrame implements ActionListener {
         return img;
     }
 
+
+    //Rotate Images
     public static BufferedImage rotateImage(BufferedImage imag, int n) { // n rotation in radians
 
         double rotationRequired = Math.toRadians(n);
@@ -125,6 +130,7 @@ public class Main extends JFrame implements ActionListener {
     }
 
     Main() {
+        //Setup
         score = 0;
         setTitle("Tank Game");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -140,6 +146,8 @@ public class Main extends JFrame implements ActionListener {
         scoreLabel.setBounds(25, 25, 50, 50);
         add(drawing);
         drawing.setBounds(0, 0, screenWidth, screenHeight);
+        
+        //Set size relative to screen
         size = screenHeight / grid.length;
         if (size > screenWidth / grid[0].length)
             size = screenWidth / grid[0].length;
@@ -171,6 +179,7 @@ public class Main extends JFrame implements ActionListener {
                     (int) (size * 1.5), Image.SCALE_DEFAULT);
         }
 
+        //Key listener
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyChar();
@@ -199,6 +208,7 @@ public class Main extends JFrame implements ActionListener {
             }
         });
 
+        //Mouse listener
         this.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
@@ -218,6 +228,7 @@ public class Main extends JFrame implements ActionListener {
 
     }
 
+    //Draw all background tiles as single image
     public void updateBackground() {
         background = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         Graphics g = background.getGraphics();
@@ -267,6 +278,8 @@ public class Main extends JFrame implements ActionListener {
             g.setColor(Color.WHITE);
             super.paintComponent(g);
             g.drawImage(background, 0, 0, null);
+            
+            //Bomb animation
             for (Tank t : tanks) {
                 for (Bomb b : t.bombs) {
                     b.bombTick++;
@@ -292,6 +305,7 @@ public class Main extends JFrame implements ActionListener {
                             g.drawImage(explosion6, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
                         else if (b.bombTick <= 735) {
                             g.drawImage(explosion7, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                            //Destroy cracked walls
                             for (int i = 0; i < walls.size(); i++) {
                                 Wall w = walls.get(i);
                                 if (w.intersects(b.explosion) && w.type == C) {
@@ -300,7 +314,8 @@ public class Main extends JFrame implements ActionListener {
                                     updateBackground();
                                 }
                             }
-
+                            
+                            //Destroy tanks
                             for(int i = 0; i < tanks.size(); i++) {
                                 Tank t2 = tanks.get(i);
                                 if (t2.intersects(b.explosion)) {
@@ -317,11 +332,12 @@ public class Main extends JFrame implements ActionListener {
                         }
                     }
                 }
-                for (Tank t2 : tanks) {
-                    g.drawImage(t2.rotateTank, (int) t2.x - size / 4, (int) t2.y - size / 4, null);
-                    g.drawImage(t2.rotateTop, (int) t2.x - size / 4, (int) t2.y - size / 4, null);
-                }
-
+                //Draw tanks
+                
+                g.drawImage(t.rotateTank, (int) t.x - size / 4, (int) t.y - size / 4, null);
+                g.drawImage(t.rotateTop, (int) t.x - size / 4, (int) t.y - size / 4, null);
+               
+                //Draw bullets
                 for (Bullet b : t.bullets) {
                     g.fillRect((int) b.x - size / 10, (int) b.y - size / 10, b.width, b.height);
                 }
@@ -336,6 +352,8 @@ public class Main extends JFrame implements ActionListener {
         dx = 0;
         dy = 0;
         int oldRotation = player.rotation;
+        
+        //Movement Logic
         if (w) {
             if (a) {
                 dx = -speed2;
@@ -370,6 +388,7 @@ public class Main extends JFrame implements ActionListener {
             player.rotation = 90;
         }
 
+        //Rotate player Tank
         if (player.rotation != oldRotation)
             player.rotateTank = rotateImage(player.tank, player.rotation).getScaledInstance((int) (size * 1.5),
                     (int) (size * 1.5),
@@ -384,6 +403,7 @@ public class Main extends JFrame implements ActionListener {
         for (int i = 0; i < tanks.size(); i++) {
             Tank t = tanks.get(i);
 
+            //Bullet collisions
             for (int ii = 0; ii < t.bullets.size(); ii++) {
                 Bullet b = t.bullets.get(ii);
                 b.move();
@@ -443,6 +463,8 @@ public class Main extends JFrame implements ActionListener {
                     }
                 }
             }
+
+            //Enemy AI
             if (t.type == E) {
                 t.topRotation = (int) Math.toDegrees(Math.atan2(((player.y * 2 + size) / 2) - ((t.y * 2 + size) / 2),
                         ((player.x * 2 + size) / 2) - ((t.x * 2 + size) / 2))) + 90;
