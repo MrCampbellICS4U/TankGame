@@ -50,6 +50,7 @@ public class Main extends JFrame implements ActionListener {
     int bombCount = 0;
     int maxBombs = 2;
     int size;
+    double bombx,bomby;
     double xb,xy;
 
     int[][] grid = {
@@ -81,6 +82,7 @@ public class Main extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new Main();
@@ -123,14 +125,22 @@ public class Main extends JFrame implements ActionListener {
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyChar();
-                if (keyCode == 'w')
+                if (keyCode == 'w'){
+                tank1 = loadImage("Resources\\tank1.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
                     w = true;
-                if (keyCode == 'a')
+                }
+                if (keyCode == 'a'){
+                tank1 = loadImage("Resources\\tank1side.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
                     a = true;
-                if (keyCode == 's')
+                }
+                if (keyCode == 's'){
+                 tank1 = loadImage("Resources\\tank1.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
                     s = true;
-                if (keyCode == 'd')
+                }
+                if (keyCode == 'd'){
+                tank1 = loadImage("Resources\\tank1side.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
                     d = true;
+            }
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
                     System.exit(0); // PAUSE MENU
             }
@@ -232,7 +242,11 @@ public class Main extends JFrame implements ActionListener {
                     if (b.bombTick >= 515 && b.bombTick <= 520) g.drawImage(explosion4,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
                     if (b.bombTick >= 520 && b.bombTick <= 525) g.drawImage(explosion5,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
                     if (b.bombTick >= 525 && b.bombTick <= 530) g.drawImage(explosion6,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                    if (b.bombTick >= 535 && b.bombTick <= 540) g.drawImage(explosion7,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    if (b.bombTick >= 535 && b.bombTick <= 540) {
+                        g.drawImage(explosion7,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                     bombx = b.x; bomby = b.y;
+                    }
+
                 }
              
             }
@@ -240,27 +254,30 @@ public class Main extends JFrame implements ActionListener {
            
         }
     }
-
+   
     @Override
     public void actionPerformed(ActionEvent e) {
         for (Bullet b : player.bullets) {
             b.move();
         }
+
         for (Bomb b : player.bombs) {
             b.bombTick ++;
-            if ( player.x- b.x == size*3/4 && player.x- b.x == -size*3/4 &&  player.y- b.y == size*3/4){
-                System.out.println("dead");
-            }
         }
         
-               
+        if ( Math.abs(player.x - bombx) <= size*3/4 && Math.abs(player.y - bomby) <= size*3/4  ){
+
+        }      
             
         if (w) {
-            System.out.println("w");
-            if (a)
+            if (a){
                 player.move(size / 30 * -1, size / 30 * -1);
-            else if (d)
+                tank1 = loadImage("Resources\\leftup.png").getScaledInstance(size*2, size*2, Image.SCALE_DEFAULT);
+            }
+            else if (d){
                 player.move(size / 30, size / 30 * -1);
+                tank1 = loadImage("Resources\\rightup.png").getScaledInstance(size*2, size*2, Image.SCALE_DEFAULT);
+            }
             else
                 player.move(0, size / 15 * -1);
         } else if (s) {
