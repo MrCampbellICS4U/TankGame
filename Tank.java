@@ -1,7 +1,9 @@
 //Create player & enemy tank objects
 //move(), shoot()
 
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Tank extends Rectangle {
@@ -13,7 +15,10 @@ public class Tank extends Rectangle {
     int bounces;
     int max;
     int maxBombs;
+    int cooldown = 75;
     int rotation, topRotation;
+    BufferedImage tank, top;
+    Image rotateTank, rotateTop;
 
     Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs) {
         super(x + width, y, width, height);
@@ -23,6 +28,13 @@ public class Tank extends Rectangle {
         this.bounces = bounces;
         this.max = max;
         this.maxBombs = maxBombs;
+        if (type == Main.P) {
+            tank = Main.loadImage("Resources\\tank.png");
+            top = Main.loadImage("Resources\\tankTop.png");
+        } else if (type == Main.E) {
+            tank = Main.loadImage("Resources\\enemyTank.png");
+            top = Main.loadImage("Resources\\enemyTankTop.png");
+        }
     }
 
     /**
@@ -34,7 +46,7 @@ public class Tank extends Rectangle {
             bullets.add(
                     b = new Bullet((2 * x + width) / 2, (2 * y + height) / 2, dx, dy, width / 5, height / 5, bounces,
                             this));
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
                 b.move();
         }
     }
