@@ -9,12 +9,14 @@ public class Tank extends Rectangle {
     ArrayList<Bullet> bullets = new ArrayList<Bullet>();
     ArrayList<Bomb> bombs = new ArrayList<Bomb>();
     double x, y;
+    int type;
     int bounces;
     int max;
     int maxBombs;
 
-    Tank(int x, int y, int width, int height, int bounces, int max, int maxBombs) {
+    Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs) {
         super(x, y, width, height);
+        this.type = type;
         this.x = x;
         this.y = y;
         this.bounces = bounces;

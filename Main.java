@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.Math;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 
 public class Main extends JFrame implements ActionListener {
 
@@ -35,6 +37,7 @@ public class Main extends JFrame implements ActionListener {
     Image wall;
     Image crackedWall;
     Image tank;
+    Image tankTop;
     Image enemyTank;
     static Image bomb;
     public Image bombred;
@@ -88,6 +91,18 @@ public class Main extends JFrame implements ActionListener {
         return img;
     }
 
+    public static BufferedImage rotateImage(BufferedImage imag, int n) { // n rotation in radians
+
+        double rotationRequired = Math.toRadians(n);
+        double locationX = imag.getWidth() / 2;
+        double locationY = imag.getHeight() / 2;
+        AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+        BufferedImage newImage = new BufferedImage(imag.getWidth(), imag.getHeight(), imag.getType());
+        op.filter(imag, newImage);
+        return (newImage);
+    }
+
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -118,6 +133,8 @@ public class Main extends JFrame implements ActionListener {
         hole = loadImage("Resources\\hole.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         wall = loadImage("Resources\\wall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         crackedWall = loadImage("Resources\\crackedWall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        tankTop = loadImage("Resources\\tankTop.png").getScaledInstance((int) (size * 1.5), (int) (size * 1.5),
+                Image.SCALE_DEFAULT);
         tank = loadImage("Resources\\tank.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         enemyTank = loadImage("Resources\\enemyTank.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         bomb = loadImage("Resources\\bomb.png").getScaledInstance(size / 2, size / 2, Image.SCALE_DEFAULT);
@@ -163,9 +180,10 @@ public class Main extends JFrame implements ActionListener {
         this.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    length = Math.sqrt((e.getX() - player.x) * (e.getX() - player.x)
-                            + (e.getY() - player.y) * (e.getY() - player.y));
-                    player.shoot((e.getX() - player.x) / length * 15, (e.getY() - player.y) / length * 15);
+                    length = Math.sqrt((e.getX() - (player.x * 2 + size) / 2) * (e.getX() - (player.x * 2 + size) / 2)
+                            + (e.getY() - (player.y * 2 + size) / 2) * (e.getY() - (player.y * 2 + size) / 2));
+                    player.shoot((e.getX() - (player.x * 2 + size) / 2) / length * 15,
+                            (e.getY() - (player.y * 2 + size) / 2) / length * 15);
                 }
                 if (e.getButton() == MouseEvent.BUTTON3)
                     player.bomb();
@@ -201,11 +219,12 @@ public class Main extends JFrame implements ActionListener {
                     case P:
                         g.drawImage(sand, x * size, y * size, null);
                         if (player == null)
-                            player = new Tank(x * size, y * size, size, size, 1, 5, 3);
+                            player = new Tank(P, x * size, y * size, size, size, 1, 3, 3);
+                        tanks.add(0, player);
                         break;
                     case E:
                         g.drawImage(sand, x * size, y * size, null);
-                        tanks.add(new Tank(x * size, y * size, size, size, 1, 3, 0));
+                        tanks.add(new Tank(E, x * size, y * size, size, size, 1, 3, 0));
                         break;
                     default:
                         System.out.println("ERROR - Map load error");
@@ -224,52 +243,49 @@ public class Main extends JFrame implements ActionListener {
             super.paintComponent(g);
             g.drawImage(background, 0, 0, null);
             for (Tank t : tanks) {
-                g.drawImage(enemyTank, (int) t.x, (int) t.y, null);
+                if (t.type == P)
+                    g.drawImage(tank, (int) player.x, (int) player.y, null);
+                g.drawImage(tankTop, (int) player.x + size / 2, (int) player.y + size / 2, null);
+                if (t.type == E)
+                    g.drawImage(enemyTank, (int) t.x, (int) t.y, null);
                 for (Bullet b : t.bullets) {
                     g.fillRect((int) b.x, (int) b.y, b.width, b.height);
                 }
-            }
-            for (Bullet b : player.bullets) {
-                g.fillRect((int) b.x, (int) b.y, b.width, b.height);
-            }
-            g.drawImage(tank, (int) player.x, (int) player.y, null);
-
-            for (Bomb b : player.bombs) {
-                b.bombTick++;
-                if (b.bombTick < 500)
-                    g.drawImage(bomb, (int) b.x - size / 4, (int) b.y - size / 4, null);
-                else if (b.bombTick < 700) {
-                    if (b.bombTick / 25 % 2 == 0)
-                        g.drawImage(bombred, (int) b.x - size / 4, (int) b.y - size / 4, null);
-                    else
+                for (Bomb b : t.bombs) {
+                    b.bombTick++;
+                    if (b.bombTick < 500)
                         g.drawImage(bomb, (int) b.x - size / 4, (int) b.y - size / 4, null);
-                } else {
-                    if (b.bombTick <= 705)
-                        g.drawImage(explosion1, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                    else if (b.bombTick <= 710)
-                        g.drawImage(explosion2, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                    else if (b.bombTick <= 715)
-                        g.drawImage(explosion3, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                    else if (b.bombTick <= 720)
-                        g.drawImage(explosion4, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                    else if (b.bombTick <= 725)
-                        g.drawImage(explosion5, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                    else if (b.bombTick <= 730)
-                        g.drawImage(explosion6, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                    else if (b.bombTick <= 735)
-                        g.drawImage(explosion7, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                    else
-                        b.tank.bombs.remove(b);
+                    else if (b.bombTick < 700) {
+                        if (b.bombTick / 25 % 2 == 0)
+                            g.drawImage(bombred, (int) b.x - size / 4, (int) b.y - size / 4, null);
+                        else
+                            g.drawImage(bomb, (int) b.x - size / 4, (int) b.y - size / 4, null);
+                    } else {
+                        if (b.bombTick <= 705)
+                            g.drawImage(explosion1, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                        else if (b.bombTick <= 710)
+                            g.drawImage(explosion2, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                        else if (b.bombTick <= 715)
+                            g.drawImage(explosion3, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                        else if (b.bombTick <= 720)
+                            g.drawImage(explosion4, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                        else if (b.bombTick <= 725)
+                            g.drawImage(explosion5, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                        else if (b.bombTick <= 730)
+                            g.drawImage(explosion6, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                        else if (b.bombTick <= 735)
+                            g.drawImage(explosion7, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
+                        else
+                            b.tank.bombs.remove(b);
+                    }
                 }
             }
+
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (Bullet b : player.bullets) {
-            b.move();
-        }
         dx = 0;
         dy = 0;
         if (w) {
@@ -296,35 +312,74 @@ public class Main extends JFrame implements ActionListener {
             dx = speed;
         player.move(dx, dy);
 
-        // wall collisions
-        for (Wall w : walls) {
-            if (w.intersects(player)) {
-                if (w.contains(player.x + speed + 1, player.y) || w.contains(player.x + size - speed - 1, player.y)) {
-                    player.y = w.y + size;
-                } else if (w.contains(player.x, player.y + speed + 1)
-                        || w.contains(player.x, player.y + size - speed - 1)) {
-                    player.x = w.x + size;
-                } else if (w.contains(player.x + speed + 1, player.y + size)
-                        || w.contains(player.x + size - speed - 1, player.y + size)) {
-                    player.y = w.y - size;
-                } else if (w.contains(player.x + size, player.y + size - speed - 1)
-                        || w.contains(player.x + size, player.y + speed + 1)) {
-                    player.x = w.x - size;
-                } else if (w.contains(player.x, player.y)) {
-                    player.x = w.x + size;
-                    player.y = w.y + size;
-                } else if (w.contains(player.x + size, player.y)) {
-                    player.x = w.x - size;
-                    player.y = w.y + size;
-                } else if (w.contains(player.x, player.y + size)) {
-                    player.x = w.x + size;
-                    player.y = w.y - size;
-                } else if (w.contains(player.x + size, player.y + size)) {
-                    player.x = w.x - size;
-                    player.y = w.y - size;
+        for (int i = 0; i < tanks.size(); i++) {
+            Tank t = tanks.get(i);
+
+            for (int ii = 0; ii < t.bullets.size(); ii++) {
+                Bullet b = t.bullets.get(ii);
+                b.move();
+                for (int iii = 0; iii < tanks.size(); iii++) {
+                    Tank t2 = tanks.get(iii);
+                    if (b.intersects(t2))
+                        tanks.remove(t2);
+
+                    for (int iv = 0; iv < t2.bullets.size(); iv++) {
+                        Bullet b2 = t2.bullets.get(iv);
+                        if (b.intersects(b2) && b != b2) {
+                            t.bullets.remove(b);
+                            t2.bullets.remove(b2);
+                        }
+                    }
                 }
             }
-            repaint();
+
+            // wall collisions
+            for (Wall w : walls) {
+                if (w.intersects(t)) {
+                    if (w.contains(t.x + speed + 1, player.y) || w.contains(t.x + size - speed - 1, t.y)) {
+                        t.y = w.y + size;
+                    } else if (w.contains(t.x, t.y + speed + 1)
+                            || w.contains(t.x, t.y + size - speed - 1)) {
+                        t.x = w.x + size;
+                    } else if (w.contains(t.x + speed + 1, t.y + size)
+                            || w.contains(t.x + size - speed - 1, t.y + size)) {
+                        t.y = w.y - size;
+                    } else if (w.contains(t.x + size, t.y + size - speed - 1)
+                            || w.contains(t.x + size, t.y + speed + 1)) {
+                        t.x = w.x - size;
+                    }
+                }
+                for (int ii = 0; ii < t.bullets.size(); ii++) {
+                    Bullet b = t.bullets.get(ii);
+                    if (b.intersects(w) && w.type != H) {
+                        b.bounces--;
+                        if (b.bounces >= 0) {
+                            if (b.x - b.dx >= w.x + size)
+                                b.dx *= -1;
+                            if (b.x - b.dx <= w.x)
+                                b.dx *= -1;
+                            if (b.y - b.dy <= w.y + size)
+                                b.dy *= -1;
+                            if (b.y - b.dy >= w.y)
+                                b.dy *= -1;
+                        } else {
+                            t.bullets.remove(b);
+                        }
+                    }
+                }
+            }
+            // if (t.type == E) {
+            // double length = Math
+            // .sqrt(((player.x * 2 + size) / 2) - ((t.x * 2 + size) / 2) * ((player.x * 2 +
+            // size) / 2)
+            // - ((t.x * 2 + size) / 2)
+            // + ((player.y * 2 + size) / 2) - ((t.y * 2 + size) / 2) * ((player.y * 2 +
+            // size) / 2)
+            // - ((t.y * 2 + size) / 2));
+            // t.shoot(((player.x * 2 + size) / 2) - ((t.x * 2 + size) / 2) / length * 15,
+            // ((player.y * 2 + size) / 2) - ((t.y * 2 + size) / 2) / length * 15);
+            // }
         }
+        repaint();
     }
 }
