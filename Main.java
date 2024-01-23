@@ -58,7 +58,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, C, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, W, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, H, S, S, S, S, S, S, W },
+            { W, S, S, S, S, H, S, S, H, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, W, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -212,35 +212,24 @@ public class Main extends JFrame implements ActionListener {
                 g.fillRect((int) b.x, (int) b.y, b.width, b.height);
             }
             g.drawImage(tank1, (int) player.x, (int) player.y, null);
-
-            
             for(Bomb b: player.bombs){
-                if (b.bombTick <= 300 )g.drawImage(bomb,(int) b.x, (int) b.y, null);
-                if (b.bombTick >= 300 ){
-                    if (b.bombTick >= 300 && b.bombTick <= 325)g.drawImage(bombred,(int) b.x, (int) b.y, null);
-                    if (b.bombTick >= 325 && b.bombTick <= 350)g.drawImage(bomb,(int) b.x, (int) b.y, null);
-                    if (b.bombTick >= 350 && b.bombTick <= 375)g.drawImage(bombred,(int) b.x, (int) b.y, null);
-                    if (b.bombTick >= 375 && b.bombTick <= 400)g.drawImage(bomb,(int) b.x, (int) b.y, null);
-                    if (b.bombTick >= 400 && b.bombTick <= 425)g.drawImage(bombred,(int) b.x, (int) b.y, null);
-                    if (b.bombTick >= 425 && b.bombTick <= 450)g.drawImage(bomb,(int) b.x, (int) b.y, null);
-                    if (b.bombTick >= 450 && b.bombTick <= 475)g.drawImage(bombred,(int) b.x, (int) b.y, null);
-                    if (b.bombTick >= 475 && b.bombTick <= 500)g.drawImage(bomb,(int) b.x, (int) b.y, null); 
-                    if (b.bombTick == 501) bombCount--;
-                    if (b.bombTick >= 501 && b.bombTick <= 505) g.drawImage(explosion1,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                    if (b.bombTick >= 505 && b.bombTick <= 510) g.drawImage(explosion2,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                    if (b.bombTick >= 510 && b.bombTick <= 515) g.drawImage(explosion3,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                    if (b.bombTick >= 515 && b.bombTick <= 520) g.drawImage(explosion4,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                    if (b.bombTick >= 520 && b.bombTick <= 525) g.drawImage(explosion5,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                    if (b.bombTick >= 525 && b.bombTick <= 530) g.drawImage(explosion6,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                    if (b.bombTick >= 535 && b.bombTick <= 540) g.drawImage(explosion7,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
-                }
-             
+                if (b.bombTick < 300 )g.drawImage(bomb,(int) b.x, (int) b.y, null);
+                else if (b.bombTick < 500){
+                    if (b.bombTick / 25 % 2 == 0)g.drawImage(bombred,(int) b.x, (int) b.y, null);
+                    else g.drawImage(bomb,(int) b.x, (int) b.y, null);
+                } else {
+                    if (b.bombTick == 500) bombCount--;
+                    else if (b.bombTick <= 505) g.drawImage(explosion1,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    else if (b.bombTick <= 510) g.drawImage(explosion2,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    else if (b.bombTick <= 515) g.drawImage(explosion3,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    else if (b.bombTick <= 520) g.drawImage(explosion4,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    else if (b.bombTick <= 525) g.drawImage(explosion5,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    else if (b.bombTick <= 530) g.drawImage(explosion6,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                    else if (b.bombTick <= 540) g.drawImage(explosion7,(int) b.x-size*3/2, (int) b.y-size*3/2, null); 
+                } 
             }
-           
-           
         }
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         for (Bullet b : player.bullets) {
@@ -251,10 +240,7 @@ public class Main extends JFrame implements ActionListener {
             if ( player.x- b.x == size*3/4 && player.x- b.x == -size*3/4 &&  player.y- b.y == size*3/4){
                 System.out.println("dead");
             }
-        }
-        
-               
-            
+        }   
         if (w) {
             System.out.println("w");
             if (a)
@@ -262,18 +248,71 @@ public class Main extends JFrame implements ActionListener {
             else if (d)
                 player.move(size / 30, size / 30 * -1);
             else
-                player.move(0, size / 15 * -1);
+                player.move(0, size / 20 * -1);
         } else if (s) {
             if (a)
                 player.move(size / 30 * -1, size / 30);
             else if (d)
                 player.move(size / 30, size / 30);
             else
-                player.move(0, size / 15);
+                player.move(0, size / 20);
         } else if (a)
-            player.move(size / 15 * -1, 0);
+            player.move(size / 20 * -1, 0);
         else if (d)
-            player.move(size / 15, 0);
+            player.move(size / 20, 0);
+               //tank displacement = size/20
+        for(Wall w : walls){
+            if(w.intersects(player)){
+                if(w.contains(player.x + size/20 + 1, player.y) || w.contains(player.x + size - size/20 - 1, player.y)){
+                    this.w = false;
+                } else if(w.contains(player.x, player.y + size/20 + 1) || w.contains(player.x, player.y + size - size/20 - 1)){
+                    a = false;
+                } else if(w.contains(player.x + size/20 + 1, player.y + size) || w.contains(player.x + size - size/20 - 1, player.y + size)){
+                    s = false;
+                } else if(w.contains(player.x + size, player.y + size - size/20 - 1) || w.contains(player.x + size, player.y + size/20 + 1)){
+                    d = false;
+                } else if(w.contains(player.x, player.y)){
+                    this.w = false;
+                    a = false;
+                } else if(w.contains(player.x + size, player.y)){
+                    this.w = false;
+                    d = false;
+                } else if(w.contains(player.x, player.y + size)){
+                    this.s = false;
+                    a = false;
+                } else if(w.contains(player.x + size, player.y + size)){
+                    this.s = false;
+                    d = false;
+                
+                }
+            }
+        }   
+        //tank displacement = size/20
+        for(Wall w : walls){
+            if(w.intersects(player)){
+                if(w.contains(player.x + size/20 + 1, player.y) || w.contains(player.x + size - size/20 - 1, player.y)){
+                    player.y = w.y + size;
+                } else if(w.contains(player.x, player.y + size/20 + 1) || w.contains(player.x, player.y + size - size/20 - 1)){
+                    player.x = w.x + size;
+                } else if(w.contains(player.x + size/20 + 1, player.y + size) || w.contains(player.x + size - size/20 - 1, player.y + size)){
+                    player.y = w.y - size;
+                } else if(w.contains(player.x + size, player.y + size - size/20 - 1) || w.contains(player.x + size, player.y + size/20 + 1)){
+                    player.x = w.x - size;
+                } else if(w.contains(player.x, player.y)){
+                    player.x = w.x + size;
+                    player.y = w.y + size;
+                } else if(w.contains(player.x + size, player.y)){
+                    player.x = w.x - size;
+                    player.y = w.y + size;
+                } else if(w.contains(player.x, player.y + size)){
+                    player.x = w.x + size;
+                    player.y = w.y - size;
+                } else if(w.contains(player.x + size, player.y + size)){
+                    player.x = w.x - size;
+                    player.y = w.y - size;
+                }
+            }
+        }
         repaint();
     }
 }
