@@ -14,8 +14,9 @@ public class Tank extends Rectangle {
     int max;
     int maxBombs;
     int rotation, topRotation;
+    int gridx, gridy;
 
-    Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs) {
+    Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs, int gridx, int gridy) {
         super(x + width, y, width, height);
         this.type = type;
         this.x = x;
@@ -23,6 +24,8 @@ public class Tank extends Rectangle {
         this.bounces = bounces;
         this.max = max;
         this.maxBombs = maxBombs;
+        this.gridx = gridx;
+        this.gridy = gridy;
     }
 
     /**

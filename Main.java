@@ -57,7 +57,7 @@ public class Main extends JFrame implements ActionListener {
 
     Timer timer;
     int TIMERSPEED = 1;
-
+    double bombx,bomby;
     static int size;
     int angle;
 
@@ -208,6 +208,8 @@ public class Main extends JFrame implements ActionListener {
     public void updateBackground() {
         background = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         Graphics g = background.getGraphics();
+        walls = new ArrayList<Wall>();
+        tanks = new ArrayList<Tank>();
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid[0].length; x++) {
                 switch (grid[y][x]) {
@@ -216,20 +218,20 @@ public class Main extends JFrame implements ActionListener {
                         break;
                     case H:
                         g.drawImage(hole, x * size, y * size, null);
-                        walls.add(new Wall(x * size, y * size, size, size, H));
+                        walls.add(new Wall(x * size, y * size, size, size, H, x, y));
                         break;
                     case W:
                         g.drawImage(wall, x * size, y * size, null);
-                        walls.add(new Wall(x * size, y * size, size, size, W));
+                        walls.add(new Wall(x * size, y * size, size, size, W, x, y));
                         break;
                     case C:
                         g.drawImage(crackedWall, x * size, y * size, null);
-                        walls.add(new Wall(x * size, y * size, size, size, C));
+                        walls.add(new Wall(x * size, y * size, size, size, C, x, y));
                         break;
                     case P:
                         g.drawImage(sand, x * size, y * size, null);
                         if (player == null)
-                            player = new Tank(P, x * size, y * size, size, size, 1, 3, 3);
+                            player = new Tank(P, x * size, y * size, size, size, 1, 3, 3, x, y);
                         tanks.add(0, player);
                         player.rotation = 90;
                         tankFinal = rotateImage(tank, player.rotation).getScaledInstance((int) (size * 1.5),
@@ -238,7 +240,7 @@ public class Main extends JFrame implements ActionListener {
                         break;
                     case E:
                         g.drawImage(sand, x * size, y * size, null);
-                        tanks.add(new Tank(E, x * size, y * size, size, size, 1, 3, 0));
+                        tanks.add(new Tank(E, x * size, y * size, size, size, 1, 3, 0, x, y));
                         break;
                     default:
                         System.out.println("ERROR - Map load error");
@@ -284,11 +286,26 @@ public class Main extends JFrame implements ActionListener {
                             for (int i = 0; i < walls.size(); i++) {
                                 Wall w = walls.get(i);
                                 if (w.intersects(b.explosion) && w.type == C) {
-                                    walls.remove(w);
+                                    grid[w.gridy][w.gridx] = S;
+                                    w.type = S;
+                                    updateBackground();
                                 }
                             }
-                        } else
-                            b.tank.bombs.remove(b);
+
+                            for(int i = 0; i < tanks.size(); i++) {
+                                Tank t2 = tanks.get(i);
+                                if (t2.intersects(b.explosion)) {
+                                    grid[t2.gridy][t2.gridx] = S;
+                                    tanks.remove(t2);
+                                    i--;
+                                }
+                            }
+                        }
+    
+                        else if  (b.bombTick == 736){
+                            bombx = 0;
+                            bomby = 0;
+                        }
                     }
                 }
                 if (t.type == P) {
@@ -345,6 +362,10 @@ public class Main extends JFrame implements ActionListener {
             player.rotation = 90;
         }
 
+
+       
+        
+        
         if (player.rotation != oldRotaion)
             tankFinal = rotateImage(tank, player.rotation).getScaledInstance((int) (size * 1.5), (int) (size * 1.5),
                     Image.SCALE_DEFAULT);
@@ -364,6 +385,7 @@ public class Main extends JFrame implements ActionListener {
                 for (int iii = 0; iii < tanks.size(); iii++) {
                     Tank t2 = tanks.get(iii);
                     if (b.intersects(t2)) {
+                        grid[t2.gridy][t2.gridx] = S;
                         tanks.remove(t2);
                         t.bullets.remove(b);
                     }
@@ -376,7 +398,7 @@ public class Main extends JFrame implements ActionListener {
                     }
                 }
             }
-
+           
             // wall collisions
             for (Wall w : walls) {
                 if (w.intersects(t)) {
@@ -393,6 +415,8 @@ public class Main extends JFrame implements ActionListener {
                         t.x = w.x - size;
                     }
                 }
+
+                
                 for (int ii = 0; ii < t.bullets.size(); ii++) {
                     Bullet b = t.bullets.get(ii);
                     if (b.intersects(w) && w.type != H) {
