@@ -13,6 +13,7 @@ public class Tank extends Rectangle {
     int bounces;
     int max;
     int maxBombs;
+    int rotation, topRotation;
 
     Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs) {
         super(x + width, y, width, height);
@@ -29,9 +30,12 @@ public class Tank extends Rectangle {
      */
     public void shoot(double dx, double dy) {
         if (bullets.size() < max) {
+            Bullet b;
             bullets.add(
-                    new Bullet((2 * x + width) / 2, (2 * y + height) / 2, dx, dy, width / 5, height / 5, bounces,
+                    b = new Bullet((2 * x + width) / 2, (2 * y + height) / 2, dx, dy, width / 5, height / 5, bounces,
                             this));
+            for (int i = 0; i < 7; i++)
+                b.move();
         }
     }
 
