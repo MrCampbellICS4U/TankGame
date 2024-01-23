@@ -19,8 +19,9 @@ public class Tank extends Rectangle {
     int rotation, topRotation;
     BufferedImage tank, top;
     Image rotateTank, rotateTop;
+    int gridx, gridy;
 
-    Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs) {
+    Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs, int gridx, int gridy) {
         super(x + width, y, width, height);
         this.type = type;
         this.x = x;
@@ -35,6 +36,8 @@ public class Tank extends Rectangle {
             tank = Main.loadImage("Resources\\enemyTank.png");
             top = Main.loadImage("Resources\\enemyTankTop.png");
         }
+        this.gridx = gridx;
+        this.gridy = gridy;
     }
 
     /**
@@ -46,7 +49,7 @@ public class Tank extends Rectangle {
             bullets.add(
                     b = new Bullet((2 * x + width) / 2, (2 * y + height) / 2, dx, dy, width / 5, height / 5, bounces,
                             this));
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 7; i++)
                 b.move();
         }
     }
