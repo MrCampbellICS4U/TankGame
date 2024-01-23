@@ -36,8 +36,8 @@ public class Main extends JFrame implements ActionListener {
     Image hole;
     Image wall;
     Image crackedWall;
-    Image tank;
-    Image tankTop;
+    BufferedImage tank;
+    BufferedImage tankTop;
     Image enemyTank;
     static Image bomb;
     public Image bombred;
@@ -50,6 +50,8 @@ public class Main extends JFrame implements ActionListener {
     public Image explosion7;
 
     BufferedImage background;
+    Image tankFinal;
+    Image tankTopFinal;
 
     boolean w, a, s, d;
 
@@ -81,6 +83,8 @@ public class Main extends JFrame implements ActionListener {
     double length;
     double dx, dy, speed, speed2;
 
+    int rotation, topRotation;
+
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
         try {
@@ -98,7 +102,7 @@ public class Main extends JFrame implements ActionListener {
         double locationY = imag.getHeight() / 2;
         AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-        BufferedImage newImage = new BufferedImage(imag.getWidth(), imag.getHeight(), imag.getType());
+        BufferedImage newImage = new BufferedImage(imag.getWidth(), imag.getHeight(), BufferedImage.TYPE_INT_ARGB);
         op.filter(imag, newImage);
         return (newImage);
     }
@@ -133,9 +137,8 @@ public class Main extends JFrame implements ActionListener {
         hole = loadImage("Resources\\hole.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         wall = loadImage("Resources\\wall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         crackedWall = loadImage("Resources\\crackedWall.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
-        tankTop = loadImage("Resources\\tankTop.png").getScaledInstance((int) (size * 1.5), (int) (size * 1.5),
-                Image.SCALE_DEFAULT);
-        tank = loadImage("Resources\\tank.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
+        tankTop = loadImage("Resources\\tankTop.png");
+        tank = loadImage("Resources\\tank1.png");
         enemyTank = loadImage("Resources\\enemyTank.png").getScaledInstance(size, size, Image.SCALE_DEFAULT);
         bomb = loadImage("Resources\\bomb.png").getScaledInstance(size / 2, size / 2, Image.SCALE_DEFAULT);
         bombred = loadImage("Resources\\bomb2.png").getScaledInstance(size / 2, size / 2, Image.SCALE_DEFAULT);
@@ -146,6 +149,13 @@ public class Main extends JFrame implements ActionListener {
         explosion5 = loadImage("Resources\\explosion5.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
         explosion6 = loadImage("Resources\\explosion6.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
         explosion7 = loadImage("Resources\\explosion7.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
+
+        rotation = 0;
+        topRotation = 0;
+        tankFinal = rotateImage(tank, rotation).getScaledInstance((int) (size * 1.5), (int) (size * 1.5),
+                Image.SCALE_DEFAULT);
+        tankTopFinal = rotateImage(tankTop, rotation).getScaledInstance((int) (size * 1.5), (int) (size * 1.5),
+                Image.SCALE_DEFAULT);
 
         updateBackground();
 
@@ -243,9 +253,10 @@ public class Main extends JFrame implements ActionListener {
             super.paintComponent(g);
             g.drawImage(background, 0, 0, null);
             for (Tank t : tanks) {
-                if (t.type == P)
-                    g.drawImage(tank, (int) player.x, (int) player.y, null);
-                g.drawImage(tankTop, (int) player.x + size / 2, (int) player.y + size / 2, null);
+                if (t.type == P) {
+                    g.drawImage(tankFinal, (int) player.x - size / 4, (int) player.y - size / 4, null);
+                    g.drawImage(tankTopFinal, (int) player.x - size / 4, (int) player.y - size / 4, null);
+                }
                 if (t.type == E)
                     g.drawImage(enemyTank, (int) t.x, (int) t.y, null);
                 for (Bullet b : t.bullets) {

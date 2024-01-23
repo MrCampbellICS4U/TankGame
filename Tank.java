@@ -15,7 +15,7 @@ public class Tank extends Rectangle {
     int maxBombs;
 
     Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs) {
-        super(x, y, width, height);
+        super(x + width, y, width, height);
         this.type = type;
         this.x = x;
         this.y = y;
