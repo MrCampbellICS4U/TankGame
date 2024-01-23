@@ -33,6 +33,8 @@ public class Main extends JFrame implements ActionListener {
 
     DrawingPanel drawing = new DrawingPanel();
 
+    JLabel scoreLabel = new JLabel("0");
+
     Image sand;
     Image hole;
     Image wall;
@@ -59,15 +61,15 @@ public class Main extends JFrame implements ActionListener {
 
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
-            { W, S, S, S, C, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, W },
+            { W, S, S, S, C, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, P, S, C, S, S, S, S, S, S, S, H, S, S, S, S, S, E, S, W },
             { W, S, S, S, C, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, W },
-            { W, S, S, S, W, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, W },
+            { W, S, S, S, W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, W, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, W },
             { W, S, S, S, W, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, C, W, C, W, C, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
 
@@ -79,6 +81,8 @@ public class Main extends JFrame implements ActionListener {
 
     double dx, dy, speed, speed2;
     double edx, edy;
+
+    int score;
 
     Random random = new Random();
 
@@ -121,6 +125,7 @@ public class Main extends JFrame implements ActionListener {
     }
 
     Main() {
+        score = 0;
         setTitle("Tank Game");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
@@ -130,6 +135,9 @@ public class Main extends JFrame implements ActionListener {
         setVisible(true);
         screenHeight = getHeight();
         screenWidth = getWidth();
+        scoreLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 64));
+        add(scoreLabel);
+        scoreLabel.setBounds(25, 25, 50, 50);
         add(drawing);
         drawing.setBounds(0, 0, screenWidth, screenHeight);
         size = screenHeight / grid.length;
@@ -296,9 +304,9 @@ public class Main extends JFrame implements ActionListener {
                             for(int i = 0; i < tanks.size(); i++) {
                                 Tank t2 = tanks.get(i);
                                 if (t2.intersects(b.explosion)) {
-                                    grid[t2.gridy][t2.gridx] = S;
-                                    tanks.remove(t2);
-                                    i--;
+                                    t2.x = random.nextInt(size, size * grid[0].length - size * 2);
+                                    t2.y = random.nextInt(size, size * grid.length - size * 2);
+                                    score++;
                                 }
                             }
                         }
@@ -324,6 +332,7 @@ public class Main extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        scoreLabel.setText(Integer.toString(score));
         dx = 0;
         dy = 0;
         int oldRotation = player.rotation;
@@ -381,16 +390,11 @@ public class Main extends JFrame implements ActionListener {
                 for (int iii = 0; iii < tanks.size(); iii++) {
                     Tank t2 = tanks.get(iii);
                     if (b.intersects(t2)) {
-                        grid[t2.gridy][t2.gridx] = S;
-                        tanks.remove(t2);
                         t.bullets.remove(b);
-                        // if(t2 != player) {
-                        //     Tank tank = new Tank(E, random.nextInt(size, screenWidth - size), random.nextInt(size, screenHeight - size), size, size, 1, 2, 0, random.nextInt(size, screenWidth - size), random.nextInt(size, screenHeight - size));
-                        //     tanks.add(tank);
-                        //     tank.rotateTank = rotateImage(tank.tank, tank.rotation).getScaledInstance((int) (size * 1.5),
-                        //     (int) (size * 1.5),
-                        //     Image.SCALE_DEFAULT);
-                        // }
+                            t2.x = random.nextInt(size, size * grid[0].length - size * 2);
+                            t2.y = random.nextInt(size, size * grid.length - size * 2);
+                        if(t2 == player) score = 0;
+                        else score++;
                     }
                     for (int iv = 0; iv < t2.bullets.size(); iv++) {
                         Bullet b2 = t2.bullets.get(iv);
