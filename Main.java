@@ -231,13 +231,13 @@ public class Main extends JFrame implements ActionListener {
                 return grid5;
             case 8:
                 return grid6;
-            case 9: 
+            case 9:
                 return grid6;
             case 10:
                 return grid6;
             case 11:
                 return grid6;
-            case 12: 
+            case 12:
                 return grid7;
             default:
                 return null;
@@ -648,10 +648,6 @@ public class Main extends JFrame implements ActionListener {
                             || w.contains(t.x + size, t.y + speed + 1)) {
                         t.x = w.x - size;
                     }
-
-                    t.rotateTank = rotateImage(t.tank, t.rotation).getScaledInstance((int) (size * 1.5),
-                            (int) (size * 1.5),
-                            Image.SCALE_DEFAULT);
 
                 }
 
