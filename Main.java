@@ -584,20 +584,35 @@ public class Main extends JFrame implements ActionListener {
                     }
                 }
 
-                
                 for (int ii = 0; ii < t.bullets.size(); ii++) {
                     Bullet b = t.bullets.get(ii);
                     if (b.intersects(w) && w.type != H) {
                         b.bounces--;
                         if (b.bounces >= 0) {
-                            if (b.x - b.dx >= w.x + size)
+                            if (b.x - b.dx >= w.x + size){
+                                 b.dx *= -1;
+                                 b.move();
+                                System.out.print("right side");
+                            }
+                               
+                            if (b.x - b.dx <= w.x){
                                 b.dx *= -1;
-                            if (b.x - b.dx <= w.x)
-                                b.dx *= -1;
-                            if (b.y - b.dy <= w.y + size)
+                                b.move();
+                                System.out.print("left side");
+                            }
+                                
+                            if (b.y - b.dy <= w.y){
                                 b.dy *= -1;
-                            if (b.y - b.dy >= w.y)
+                                b.move();
+                                System.out.print("Top");
+                            }
+                                
+                            if (b.y - b.dy >= w.y + size){
                                 b.dy *= -1;
+                                b.move();
+                                System.out.print("Bottom");
+                            }
+                                
                         } else {
                             t.bullets.remove(b);
                         }
