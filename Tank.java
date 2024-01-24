@@ -16,12 +16,12 @@ public class Tank extends Rectangle {
     int bounces;
     int max;
     int maxBombs;
-    int cooldown = 75;
+    int cooldown = 50;
     int rotation, topRotation;
     BufferedImage tank, top;
     Image rotateTank, rotateTop;
     int gridx, gridy;
-    double dx, dy;
+    double dx = 0, dy = 0;
 
     Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs, int gridx, int gridy) {
         super(x + width, y, width, height);
@@ -40,6 +40,9 @@ public class Tank extends Rectangle {
         }
         this.gridx = gridx;
         this.gridy = gridy;
+        rotateTank = tank.getScaledInstance((int) (Main.size * 1.5),
+                (int) (Main.size * 1.5),
+                Image.SCALE_DEFAULT);
     }
 
     /**

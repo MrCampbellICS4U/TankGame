@@ -33,7 +33,7 @@ public class Main extends JFrame implements ActionListener {
 
     DrawingPanel drawing = new DrawingPanel();
 
-    JLabel scoreLabel = new JLabel("0");
+    JFrame frame;
 
     Image sand;
     Image hole;
@@ -121,8 +121,6 @@ public class Main extends JFrame implements ActionListener {
 
     double speed, speed2;
 
-    boolean paused = false;
-
     int mouseX, mouseY;
 
     int score;
@@ -209,6 +207,7 @@ public class Main extends JFrame implements ActionListener {
     Main() {
         // Setup
         score = 0;
+        frame = this;
         setTitle("Tank Game");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
@@ -218,9 +217,6 @@ public class Main extends JFrame implements ActionListener {
         setVisible(true);
         screenHeight = getHeight();
         screenWidth = getWidth();
-        scoreLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 64));
-        add(scoreLabel);
-        scoreLabel.setBounds(25, 25, 50, 50);
         add(drawing);
         drawing.setBounds(0, 0, screenWidth, screenHeight);
 
@@ -268,14 +264,8 @@ public class Main extends JFrame implements ActionListener {
                     s = true;
                 if (keyCode == 'd')
                     d = true;
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    paused = !paused;
-                    if (paused) {
-                        timer.stop();
-
-                    }
-
-                }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    System.exit(0);
             }
 
             public void keyReleased(KeyEvent e) {
@@ -402,8 +392,6 @@ public class Main extends JFrame implements ActionListener {
                             for (int i = 0; i < tanks.size(); i++) {
                                 Tank t2 = tanks.get(i);
                                 if (t2.intersects(b.explosion)) {
-                                    t2.x = random.nextInt(size, size * grid[0].length - size * 2);
-                                    t2.y = random.nextInt(size, size * grid.length - size * 2);
                                     score++;
                                     switch (score) {
                                         case 1:
@@ -446,7 +434,6 @@ public class Main extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        scoreLabel.setText(Integer.toString(score));
         player.dx = 0;
         player.dy = 0;
         int oldRotation = player.rotation;
@@ -511,8 +498,6 @@ public class Main extends JFrame implements ActionListener {
                     if (b.intersects(t2)) {
                         t.bullets.remove(b);
                         tanks.remove(t2);
-                        t2.x = random.nextInt(size, size * grid[0].length - size * 2);
-                        t2.y = random.nextInt(size, size * grid.length - size * 2);
                         if (t2 == player)
                             score = 0;
                         else
@@ -558,6 +543,11 @@ public class Main extends JFrame implements ActionListener {
                             || w.contains(t.x + size, t.y + speed + 1)) {
                         t.x = w.x - size;
                     }
+
+                    t.rotateTank = rotateImage(t.tank, t.rotation).getScaledInstance((int) (size * 1.5),
+                            (int) (size * 1.5),
+                            Image.SCALE_DEFAULT);
+
                 }
 
                 for (int ii = 0; ii < t.bullets.size(); ii++) {
