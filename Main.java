@@ -222,13 +222,23 @@ public class Main extends JFrame implements ActionListener {
             case 3:
                 return grid3;
             case 4:
-                return grid3;
+                return grid4;
             case 5:
                 return grid4;
             case 6:
-                return grid4;
+                return grid5;
             case 7:
-                return grid4;
+                return grid5;
+            case 8:
+                return grid6;
+            case 9: 
+                return grid6;
+            case 10:
+                return grid6;
+            case 11:
+                return grid6;
+            case 12: 
+                return grid7;
             default:
                 return null;
         }
@@ -413,27 +423,27 @@ public class Main extends JFrame implements ActionListener {
             for (Tank t : tanks) {
                 for (Bomb b : t.bombs) {
                     b.bombTick++;
-                    if (b.bombTick < 500)
+                    if (b.bombTick < 300)
                         g.drawImage(bomb, (int) b.x - size / 4, (int) b.y - size / 4, null);
-                    else if (b.bombTick < 700) {
+                    else if (b.bombTick < 500) {
                         if (b.bombTick / 25 % 2 == 0)
                             g.drawImage(bombred, (int) b.x - size / 4, (int) b.y - size / 4, null);
                         else
                             g.drawImage(bomb, (int) b.x - size / 4, (int) b.y - size / 4, null);
                     } else {
-                        if (b.bombTick <= 705)
+                        if (b.bombTick <= 505)
                             g.drawImage(explosion1, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 710)
+                        else if (b.bombTick <= 510)
                             g.drawImage(explosion2, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 715)
+                        else if (b.bombTick <= 515)
                             g.drawImage(explosion3, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 720)
+                        else if (b.bombTick <= 520)
                             g.drawImage(explosion4, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 725)
+                        else if (b.bombTick <= 525)
                             g.drawImage(explosion5, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 730)
+                        else if (b.bombTick <= 530)
                             g.drawImage(explosion6, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 735) {
+                        else if (b.bombTick <= 535) {
                             g.drawImage(explosion7, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
                             // Destroy cracked walls
                             for (int i = 0; i < walls.size(); i++) {
