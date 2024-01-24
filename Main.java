@@ -60,7 +60,7 @@ public class Main extends JFrame implements ActionListener {
     int angle;
 
     //Game Layout
-        //1 Enemy
+        //Level 1: 1 Enemy
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, C, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -74,7 +74,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, S, S, S, C, W, C, W, C, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
-            //1 Enemy
+            //Level 2: 1 Enemy
         int[][] grid2 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
@@ -88,7 +88,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
-            // 2 enemies
+            //Level 3: 2 enemies
         int[][] grid3 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -102,7 +102,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };    
-            // 2 Enemies
+            //Level 4: 2 Enemies
             int[][] grid4 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -116,7 +116,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
-            // 3 Enemies
+            //Level 5: 3 Enemies
             int[][] grid5 = {
                 { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
                 { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -130,7 +130,7 @@ public class Main extends JFrame implements ActionListener {
                 { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, S, W },
                 { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
                 { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
-                // 3 Enemies
+                //Level 6: 3 Enemies
             int[][] grid6 = {
                 { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
                 { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
@@ -144,6 +144,20 @@ public class Main extends JFrame implements ActionListener {
                 { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
                 { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
                 { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
+                //Level 7: W
+                int[][] grid7 = {
+                    { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
+                    { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, W, S, S, S, S, S, S, S, W, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, W, S, S, S, W, S, S, S, W, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, W, S, S, S, W, S, S, S, W, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, S, W, S, W, S, W, S, W, S, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, S, W, S, W, S, W, S, W, S, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, S, S, W, S, S, S, W, S, S, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                    { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                    { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
 
     ArrayList<Wall> walls = new ArrayList<Wall>();
 
@@ -211,6 +225,9 @@ public class Main extends JFrame implements ActionListener {
             case 7: return grid5;
             case 8: return grid5;
             case 9: return grid6;
+            case 10: return grid6;
+            case 11: return grid6;
+            case 12: return grid7;
             default: return null;
         }
     }
@@ -254,7 +271,7 @@ public class Main extends JFrame implements ActionListener {
         explosion6 = loadImage("Resources\\explosion6.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
         explosion7 = loadImage("Resources\\explosion7.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
 
-        updateBackground(grid);
+        updateBackground(getMap());
 
         for (Tank t : tanks) {
             t.rotation = 90;
@@ -422,6 +439,9 @@ public class Main extends JFrame implements ActionListener {
                                         case 7: break;
                                         case 8: break;
                                         case 9: updateBackground(getMap()); break;
+                                        case 10: break;
+                                        case 11: break;
+                                        case 12: updateBackground(getMap()); break;
                                     }
                                 }
                             }
@@ -434,7 +454,6 @@ public class Main extends JFrame implements ActionListener {
                     }
                 }
                 //Draw tanks
-                
                 g.drawImage(t.rotateTank, (int) t.x - size / 4, (int) t.y - size / 4, null);
                 g.drawImage(t.rotateTop, (int) t.x - size / 4, (int) t.y - size / 4, null);
                
@@ -443,7 +462,6 @@ public class Main extends JFrame implements ActionListener {
                     g.fillRect((int) b.x - size / 10, (int) b.y - size / 10, b.width, b.height);
                 }
             }
-
         }
     }
 
@@ -530,6 +548,9 @@ public class Main extends JFrame implements ActionListener {
                             case 7: break;
                             case 8: break;
                             case 9: updateBackground(getMap()); break;
+                            case 10: break;
+                            case 11: break;
+                            case 12: updateBackground(getMap()); break;
                         }
                     }
                     for (int iv = 0; iv < t2.bullets.size(); iv++) {
