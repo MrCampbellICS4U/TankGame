@@ -60,6 +60,7 @@ public class Main extends JFrame implements ActionListener {
     int angle;
 
     //Game Layout
+        //1 Enemy
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, C, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -73,6 +74,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, S, S, S, C, W, C, W, C, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
+            //1 Enemy
         int[][] grid2 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
@@ -86,6 +88,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
+            // 2 enemies
         int[][] grid3 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -99,6 +102,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };    
+            // 2 Enemies
             int[][] grid4 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -111,7 +115,35 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, W, W, W, W, W, W, W, W, W, W, W, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
+            // 3 Enemies
+            int[][] grid5 = {
+                { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, S, S, W },
+                { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, C, C, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, C, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, C, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, C, C, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
+                // 3 Enemies
+            int[][] grid6 = {
+                { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
+                { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, E, S, S, S, S, S, H, S, S, S, S, S, E, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, H, H, H, H, H, S, S, S, S, H, H, H, H, H, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, P, S, S, S, S, S, H, S, S, S, S, S, E, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
+                { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
+                { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
 
     ArrayList<Wall> walls = new ArrayList<Wall>();
 
@@ -173,10 +205,12 @@ public class Main extends JFrame implements ActionListener {
             case 1: return grid2;
             case 2: return grid3;
             case 3: return grid3;
-            case 4: return grid3;
+            case 4: return grid4;
             case 5: return grid4;
-            case 6: return grid4;
-            case 7: return grid4;
+            case 6: return grid5;
+            case 7: return grid5;
+            case 8: return grid5;
+            case 9: return grid6;
             default: return null;
         }
     }
@@ -370,16 +404,24 @@ public class Main extends JFrame implements ActionListener {
                             //Destroy tanks
                             for(int i = 0; i < tanks.size(); i++) {
                                 Tank t2 = tanks.get(i);
+                                if(t2 == player){
+                                    score = 0;
+                                    System.exit(0);
+                                }
                                 if (t2.intersects(b.explosion)) {
                                     t2.x = random.nextInt(size, size * grid[0].length - size * 2);
                                     t2.y = random.nextInt(size, size * grid.length - size * 2);
                                     score++;
                                     switch(score){
-                                        case 1: updateBackground(grid2); break;
-                                        case 2: updateBackground(grid3); break;
+                                        case 1: updateBackground(getMap()); break;
+                                        case 2: updateBackground(getMap()); break;
                                         case 3: break;
-                                        case 4: updateBackground(grid4); break;
+                                        case 4: updateBackground(getMap()); break;
                                         case 5: break;
+                                        case 6: updateBackground(getMap()); break;
+                                        case 7: break;
+                                        case 8: break;
+                                        case 9: updateBackground(getMap()); break;
                                     }
                                 }
                             }
@@ -473,14 +515,21 @@ public class Main extends JFrame implements ActionListener {
                         tanks.remove(t2);
                             t2.x = random.nextInt(size, size * grid[0].length - size * 2);
                             t2.y = random.nextInt(size, size * grid.length - size * 2);
-                        if(t2 == player) score = 0;
+                        if(t2 == player) {
+                            System.exit(0);
+                            score = 0;
+                        }
                         else score++;
                         switch(score){
-                            case 1: updateBackground(grid2); break;
-                            case 2: updateBackground(grid3); break;
+                            case 1: updateBackground(getMap()); break;
+                            case 2: updateBackground(getMap()); break;
                             case 3: break;
-                            case 4: updateBackground(grid4); break;
+                            case 4: updateBackground(getMap()); break;
                             case 5: break;
+                            case 6: updateBackground(getMap()); break;
+                            case 7: break;
+                            case 8: break;
+                            case 9: updateBackground(getMap()); break;
                         }
                     }
                     for (int iv = 0; iv < t2.bullets.size(); iv++) {
