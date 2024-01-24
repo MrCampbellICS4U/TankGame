@@ -53,6 +53,8 @@ public class Main extends JFrame implements ActionListener {
 
     boolean w, a, s, d;
 
+    boolean updtTanks;
+
     Timer timer;
     int TIMERSPEED = 1;
     double bombx,bomby;
@@ -271,7 +273,7 @@ public class Main extends JFrame implements ActionListener {
         explosion6 = loadImage("Resources\\explosion6.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
         explosion7 = loadImage("Resources\\explosion7.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
 
-        updateBackground(getMap());
+        updateBackground(getMap(), true);
 
         for (Tank t : tanks) {
             t.rotation = 90;
@@ -332,7 +334,7 @@ public class Main extends JFrame implements ActionListener {
     }
 
     //Draw all background tiles as single image
-    public void updateBackground(int[][] map) {
+    public void updateBackground(int[][] map, boolean updateTanks) {
         background = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         Graphics g = background.getGraphics();
         walls = new ArrayList<Wall>();
@@ -359,7 +361,7 @@ public class Main extends JFrame implements ActionListener {
                         g.drawImage(sand, x * size, y * size, null);
                         if (player == null)
                             player = new Tank(P, x * size, y * size, size, size, 1, 3, 3, x, y);
-                            else {
+                            else if (updateTanks = true){
                                 player.x = x * size;
                                 player.y = y * size;
                             }
@@ -368,6 +370,14 @@ public class Main extends JFrame implements ActionListener {
                     case E:
                         g.drawImage(sand, x * size, y * size, null);
                         tanks.add(new Tank(E, x * size, y * size, size, size, 1, 2, 0, x, y));
+                        if(updateTanks = true){
+                            for(Tank t : tanks){
+                                if (t != player){
+                                    t.x = x * size;
+                                    t.y = y * size;
+                                }
+                            }
+                        }
                         break;
                     default:
                         System.out.println("ERROR - Map load error");
@@ -418,7 +428,7 @@ public class Main extends JFrame implements ActionListener {
                                 if (w.intersects(b.explosion) && w.type == C) {
                                     getMap()[w.gridy][w.gridx] = S;
                                     w.type = S;
-                                    updateBackground(getMap());
+                                    updateBackground(getMap(), false);
                                 }
                             }
                             
@@ -427,25 +437,23 @@ public class Main extends JFrame implements ActionListener {
                                 Tank t2 = tanks.get(i);
                                 if(t2 == player){
                                     score = 0;
-                                    System.exit(0);
+                                    updateBackground(grid, true);
                                 }
                                 if (t2.intersects(b.explosion)) {
-                                    t2.x = random.nextInt(size, size * grid[0].length - size * 2);
-                                    t2.y = random.nextInt(size, size * grid.length - size * 2);
                                     score++;
                                     switch(score){
-                                        case 1: updateBackground(getMap()); break;
-                                        case 2: updateBackground(getMap()); break;
+                                        case 1: updateBackground(getMap(), true); break;
+                                        case 2: updateBackground(getMap(), true); break;
                                         case 3: break;
-                                        case 4: updateBackground(getMap()); break;
+                                        case 4: updateBackground(getMap(), true); break;
                                         case 5: break;
-                                        case 6: updateBackground(getMap()); break;
+                                        case 6: updateBackground(getMap(), true); break;
                                         case 7: break;
                                         case 8: break;
-                                        case 9: updateBackground(getMap()); break;
+                                        case 9: updateBackground(getMap(), true); break;
                                         case 10: break;
                                         case 11: break;
-                                        case 12: updateBackground(getMap()); break;
+                                        case 12: updateBackground(getMap(), true); break;
                                     }
                                 }
                             }
@@ -535,26 +543,24 @@ public class Main extends JFrame implements ActionListener {
                     if (b.intersects(t2)) {
                         t.bullets.remove(b);
                         tanks.remove(t2);
-                            t2.x = random.nextInt(size, size * grid[0].length - size * 2);
-                            t2.y = random.nextInt(size, size * grid.length - size * 2);
                         if(t2 == player) {
-                            System.exit(0);
                             score = 0;
+                            updateBackground(grid, false);
                         }
                         else score++;
                         switch(score){
-                            case 1: updateBackground(getMap()); break;
-                            case 2: updateBackground(getMap()); break;
+                            case 1: updateBackground(getMap(), true); break;
+                            case 2: updateBackground(getMap(), true); break;
                             case 3: break;
-                            case 4: updateBackground(getMap()); break;
+                            case 4: updateBackground(getMap(), true); break;
                             case 5: break;
-                            case 6: updateBackground(getMap()); break;
+                            case 6: updateBackground(getMap(), true); break;
                             case 7: break;
                             case 8: break;
-                            case 9: updateBackground(getMap()); break;
+                            case 9: updateBackground(getMap(), true); break;
                             case 10: break;
                             case 11: break;
-                            case 12: updateBackground(getMap()); break;
+                            case 12: updateBackground(getMap(), true); break;
                         }
                     }
                     for (int iv = 0; iv < t2.bullets.size(); iv++) {
@@ -592,27 +598,19 @@ public class Main extends JFrame implements ActionListener {
                             if (b.x - b.dx >= w.x + size){
                                  b.dx *= -1;
                                  b.move();
-                                System.out.print("right side");
                             }
-                               
                             if (b.x - b.dx <= w.x){
                                 b.dx *= -1;
                                 b.move();
-                                System.out.print("left side");
                             }
-                                
                             if (b.y - b.dy <= w.y){
                                 b.dy *= -1;
                                 b.move();
-                                System.out.print("Top");
                             }
-                                
                             if (b.y - b.dy >= w.y + size){
                                 b.dy *= -1;
                                 b.move();
-                                System.out.print("Bottom");
                             }
-                                
                         } else {
                             t.bullets.remove(b);
                         }
@@ -633,8 +631,8 @@ public class Main extends JFrame implements ActionListener {
                                     - (t.x * 2 + size) / 2)
                                     + ((player.y * 2 + size) / 2 - (t.y * 2 + size) / 2)
                                             * ((player.y * 2 + size) / 2 - (t.y * 2 + size) / 2));
-                    t.shoot(((player.x * 2 + size) / 2 - ((t.x * 2 + size) / 2)) / length * 10,
-                            ((player.y * 2 + size) / 2 - ((t.y * 2 + size) / 2)) / length * 10);
+                    // t.shoot(((player.x * 2 + size) / 2 - ((t.x * 2 + size) / 2)) / length * 10,
+                    //         ((player.y * 2 + size) / 2 - ((t.y * 2 + size) / 2)) / length * 10);
                     t.cooldown = 50;
 
                     int r = random.nextInt(4);
