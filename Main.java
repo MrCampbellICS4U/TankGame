@@ -73,6 +73,45 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, S, S, S, C, W, C, W, C, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
+        int[][] grid2 = {
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
+            { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
+            { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
+            { W, S, S, S, S, S, S, W, S, S, S, S, S, W, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, W, S, S, S, S, S, W, S, S, S, S, S, S, W },
+            { W, S, S, S, P, S, S, W, S, S, S, S, S, W, S, S, E, S, S, S, W },
+            { W, S, S, S, S, S, S, W, S, S, S, S, S, W, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, W, S, S, S, S, S, W, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
+            { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
+        int[][] grid3 = {
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, W },
+            { W, S, S, S, S, W, S, S, S, S, S, W, C, C, W, W, S, S, S, S, W },
+            { W, S, S, S, S, W, S, S, S, S, S, S, S, S, S, W, S, S, S, S, W },
+            { W, S, S, S, S, C, S, S, S, S, S, S, S, S, S, C, S, S, S, S, W },
+            { W, S, S, S, S, C, S, S, S, S, S, S, S, S, S, C, S, S, S, S, W },
+            { W, S, S, S, S, W, S, S, S, S, S, S, S, S, S, W, S, S, S, S, W },
+            { W, S, S, S, S, W, W, C, C, W, S, S, S, S, S, W, S, S, S, S, W },
+            { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };    
+            int[][] grid4 = {
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, W, W, W, W, W, W, W, W, W, W, W, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, E, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, P, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, E, S, S, W },
+            { W, S, S, S, S, W, W, W, W, W, W, W, W, W, W, W, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
 
     ArrayList<Wall> walls = new ArrayList<Wall>();
 
@@ -128,6 +167,19 @@ public class Main extends JFrame implements ActionListener {
         else
             return (targetY - originY) / length;
     }
+    public int[][] getMap(){
+        switch(score){
+            case 0: return grid;
+            case 1: return grid2;
+            case 2: return grid3;
+            case 3: return grid3;
+            case 4: return grid3;
+            case 5: return grid4;
+            case 6: return grid4;
+            case 7: return grid4;
+            default: return null;
+        }
+    }
 
     Main() {
         //Setup
@@ -168,7 +220,7 @@ public class Main extends JFrame implements ActionListener {
         explosion6 = loadImage("Resources\\explosion6.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
         explosion7 = loadImage("Resources\\explosion7.png").getScaledInstance(3 * size, 3 * size, Image.SCALE_DEFAULT);
 
-        updateBackground();
+        updateBackground(grid);
 
         for (Tank t : tanks) {
             t.rotation = 90;
@@ -229,14 +281,14 @@ public class Main extends JFrame implements ActionListener {
     }
 
     //Draw all background tiles as single image
-    public void updateBackground() {
+    public void updateBackground(int[][] map) {
         background = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         Graphics g = background.getGraphics();
         walls = new ArrayList<Wall>();
         tanks = new ArrayList<Tank>();
-        for (int y = 0; y < grid.length; y++) {
-            for (int x = 0; x < grid[0].length; x++) {
-                switch (grid[y][x]) {
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[0].length; x++) {
+                switch (map[y][x]) {
                     case S:
                         g.drawImage(sand, x * size, y * size, null);
                         break;
@@ -309,9 +361,9 @@ public class Main extends JFrame implements ActionListener {
                             for (int i = 0; i < walls.size(); i++) {
                                 Wall w = walls.get(i);
                                 if (w.intersects(b.explosion) && w.type == C) {
-                                    grid[w.gridy][w.gridx] = S;
+                                    getMap()[w.gridy][w.gridx] = S;
                                     w.type = S;
-                                    updateBackground();
+                                    updateBackground(getMap());
                                 }
                             }
                             
@@ -322,6 +374,13 @@ public class Main extends JFrame implements ActionListener {
                                     t2.x = random.nextInt(size, size * grid[0].length - size * 2);
                                     t2.y = random.nextInt(size, size * grid.length - size * 2);
                                     score++;
+                                    switch(score){
+                                        case 1: updateBackground(grid2); break;
+                                        case 2: updateBackground(grid3); break;
+                                        case 3: break;
+                                        case 4: updateBackground(grid4); break;
+                                        case 5: break;
+                                    }
                                 }
                             }
                         }
@@ -352,7 +411,7 @@ public class Main extends JFrame implements ActionListener {
         dx = 0;
         dy = 0;
         int oldRotation = player.rotation;
-        
+
         //Movement Logic
         if (w) {
             if (a) {
@@ -411,10 +470,18 @@ public class Main extends JFrame implements ActionListener {
                     Tank t2 = tanks.get(iii);
                     if (b.intersects(t2)) {
                         t.bullets.remove(b);
+                        tanks.remove(t2);
                             t2.x = random.nextInt(size, size * grid[0].length - size * 2);
                             t2.y = random.nextInt(size, size * grid.length - size * 2);
                         if(t2 == player) score = 0;
                         else score++;
+                        switch(score){
+                            case 1: updateBackground(grid2); break;
+                            case 2: updateBackground(grid3); break;
+                            case 3: break;
+                            case 4: updateBackground(grid4); break;
+                            case 5: break;
+                        }
                     }
                     for (int iv = 0; iv < t2.bullets.size(); iv++) {
                         Bullet b2 = t2.bullets.get(iv);
