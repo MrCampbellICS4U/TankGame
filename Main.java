@@ -55,11 +55,11 @@ public class Main extends JFrame implements ActionListener {
 
     Timer timer;
     int TIMERSPEED = 1;
-    double bombx,bomby;
+    double bombx, bomby;
     static int size;
     int angle;
 
-    //Game Layout
+    // Game Layout
     int[][] grid = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, C, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -73,7 +73,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, S, S, S, C, W, C, W, C, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
-        int[][] grid2 = {
+    int[][] grid2 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
@@ -86,7 +86,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
             { W, S, S, S, C, S, S, S, S, S, H, S, S, S, S, S, C, S, S, S, W },
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
-        int[][] grid3 = {
+    int[][] grid3 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, W },
@@ -98,8 +98,8 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, W, W, C, C, W, S, S, S, S, S, W, S, S, S, S, W },
             { W, S, P, S, S, S, S, S, S, S, S, S, S, S, S, S, S, E, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };    
-            int[][] grid4 = {
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
+    int[][] grid4 = {
             { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
@@ -111,7 +111,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, W, W, W, W, W, W, W, W, W, W, W, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } }; 
+            { W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W } };
 
     ArrayList<Wall> walls = new ArrayList<Wall>();
 
@@ -119,15 +119,17 @@ public class Main extends JFrame implements ActionListener {
 
     Tank player;
 
-    double dx, dy, speed, speed2;
-    double edx, edy;
+    double speed, speed2;
+
+    boolean paused = false;
+
+    int mouseX, mouseY;
 
     int score;
 
     Random random = new Random();
 
-
-    //Load Images
+    // Load Images
     static BufferedImage loadImage(String filename) {
         BufferedImage img = null;
         try {
@@ -138,8 +140,7 @@ public class Main extends JFrame implements ActionListener {
         return img;
     }
 
-
-    //Rotate Images
+    // Rotate Images
     public static BufferedImage rotateImage(BufferedImage imag, int n) { // n rotation in radians
 
         double rotationRequired = Math.toRadians(n);
@@ -160,29 +161,53 @@ public class Main extends JFrame implements ActionListener {
         });
     }
 
-    public double normalize(boolean x, double targetX, double targetY, double originX, double originY) {
-        double length = Math.sqrt(Math.pow(targetX - originX, 2) + Math.pow(targetY - originY, 2));
-        if (x)
-            return (targetX - originX) / length;
-        else
-            return (targetY - originY) / length;
+    // public int mouseX() {
+    // if(getMousePosition().getX() != null) return mouseX;
+    // }
+
+    public int[][] getMap() {
+        switch (score) {
+            case 0:
+                return grid;
+            case 1:
+                return grid2;
+            case 2:
+                return grid3;
+            case 3:
+                return grid3;
+            case 4:
+                return grid3;
+            case 5:
+                return grid4;
+            case 6:
+                return grid4;
+            case 7:
+                return grid4;
+            default:
+                return null;
+        }
     }
-    public int[][] getMap(){
-        switch(score){
-            case 0: return grid;
-            case 1: return grid2;
-            case 2: return grid3;
-            case 3: return grid3;
-            case 4: return grid3;
-            case 5: return grid4;
-            case 6: return grid4;
-            case 7: return grid4;
-            default: return null;
+
+    public int getMouseX() {
+        if (getMousePosition() == null)
+            return mouseX;
+        else {
+            mouseX = getMousePosition().x;
+            return mouseX;
+        }
+    }
+
+    public int getMouseY() {
+        if (getMousePosition() == null)
+            return mouseY;
+        else {
+            mouseY = getMousePosition().y;
+            return mouseY;
         }
     }
 
     Main() {
-        //Setup
+        // Setup
         score = 0;
         setTitle("Tank Game");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -198,8 +223,8 @@ public class Main extends JFrame implements ActionListener {
         scoreLabel.setBounds(25, 25, 50, 50);
         add(drawing);
         drawing.setBounds(0, 0, screenWidth, screenHeight);
-        
-        //Set size relative to screen
+
+        // Set size relative to screen
         size = screenHeight / grid.length;
         if (size > screenWidth / grid[0].length)
             size = screenWidth / grid[0].length;
@@ -231,7 +256,7 @@ public class Main extends JFrame implements ActionListener {
                     (int) (size * 1.5), Image.SCALE_DEFAULT);
         }
 
-        //Key listener
+        // Key listener
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyChar();
@@ -243,8 +268,14 @@ public class Main extends JFrame implements ActionListener {
                     s = true;
                 if (keyCode == 'd')
                     d = true;
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-                    System.exit(0); // PAUSE MENU
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    paused = !paused;
+                    if (paused) {
+                        timer.stop();
+
+                    }
+
+                }
             }
 
             public void keyReleased(KeyEvent e) {
@@ -260,7 +291,7 @@ public class Main extends JFrame implements ActionListener {
             }
         });
 
-        //Mouse listener
+        // Mouse listener
         this.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
@@ -280,7 +311,7 @@ public class Main extends JFrame implements ActionListener {
 
     }
 
-    //Draw all background tiles as single image
+    // Draw all background tiles as single image
     public void updateBackground(int[][] map) {
         background = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         Graphics g = background.getGraphics();
@@ -330,8 +361,8 @@ public class Main extends JFrame implements ActionListener {
             g.setColor(Color.WHITE);
             super.paintComponent(g);
             g.drawImage(background, 0, 0, null);
-            
-            //Bomb animation
+
+            // Bomb animation
             for (Tank t : tanks) {
                 for (Bomb b : t.bombs) {
                     b.bombTick++;
@@ -357,7 +388,7 @@ public class Main extends JFrame implements ActionListener {
                             g.drawImage(explosion6, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
                         else if (b.bombTick <= 735) {
                             g.drawImage(explosion7, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                            //Destroy cracked walls
+                            // Destroy cracked walls
                             for (int i = 0; i < walls.size(); i++) {
                                 Wall w = walls.get(i);
                                 if (w.intersects(b.explosion) && w.type == C) {
@@ -366,37 +397,45 @@ public class Main extends JFrame implements ActionListener {
                                     updateBackground(getMap());
                                 }
                             }
-                            
-                            //Destroy tanks
-                            for(int i = 0; i < tanks.size(); i++) {
+
+                            // Destroy tanks
+                            for (int i = 0; i < tanks.size(); i++) {
                                 Tank t2 = tanks.get(i);
                                 if (t2.intersects(b.explosion)) {
                                     t2.x = random.nextInt(size, size * grid[0].length - size * 2);
                                     t2.y = random.nextInt(size, size * grid.length - size * 2);
                                     score++;
-                                    switch(score){
-                                        case 1: updateBackground(grid2); break;
-                                        case 2: updateBackground(grid3); break;
-                                        case 3: break;
-                                        case 4: updateBackground(grid4); break;
-                                        case 5: break;
+                                    switch (score) {
+                                        case 1:
+                                            updateBackground(grid2);
+                                            break;
+                                        case 2:
+                                            updateBackground(grid3);
+                                            break;
+                                        case 3:
+                                            break;
+                                        case 4:
+                                            updateBackground(grid4);
+                                            break;
+                                        case 5:
+                                            break;
                                     }
                                 }
                             }
                         }
-    
-                        else if  (b.bombTick == 736){
+
+                        else if (b.bombTick == 736) {
                             bombx = 0;
                             bomby = 0;
                         }
                     }
                 }
-                //Draw tanks
-                
+                // Draw tanks
+
                 g.drawImage(t.rotateTank, (int) t.x - size / 4, (int) t.y - size / 4, null);
                 g.drawImage(t.rotateTop, (int) t.x - size / 4, (int) t.y - size / 4, null);
-               
-                //Draw bullets
+
+                // Draw bullets
                 for (Bullet b : t.bullets) {
                     g.fillRect((int) b.x - size / 10, (int) b.y - size / 10, b.width, b.height);
                 }
@@ -408,61 +447,62 @@ public class Main extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         scoreLabel.setText(Integer.toString(score));
-        dx = 0;
-        dy = 0;
+        player.dx = 0;
+        player.dy = 0;
         int oldRotation = player.rotation;
 
-        //Movement Logic
+        // Movement Logic
         if (w) {
             if (a) {
-                dx = -speed2;
-                dy = -speed2;
+                player.dx = -speed2;
+                player.dy = -speed2;
                 player.rotation = 315;
             } else if (d) {
-                dx = speed2;
-                dy = -speed2;
+                player.dx = speed2;
+                player.dy = -speed2;
                 player.rotation = 45;
             } else {
-                dy = -speed;
+                player.dy = -speed;
                 player.rotation = 0;
             }
         } else if (s) {
             if (a) {
-                dx = -speed2;
-                dy = speed2;
+                player.dx = -speed2;
+                player.dy = speed2;
                 player.rotation = 225;
             } else if (d) {
-                dx = speed2;
-                dy = speed2;
+                player.dx = speed2;
+                player.dy = speed2;
                 player.rotation = 135;
             } else {
-                dy = speed;
+                player.dy = speed;
                 player.rotation = 180;
             }
         } else if (a) {
-            dx = -speed;
+            player.dx = -speed;
             player.rotation = 270;
         } else if (d) {
-            dx = speed;
+            player.dx = speed;
             player.rotation = 90;
         }
 
-        //Rotate player Tank
+        // Rotate player Tank
         if (player.rotation != oldRotation)
             player.rotateTank = rotateImage(player.tank, player.rotation).getScaledInstance((int) (size * 1.5),
                     (int) (size * 1.5),
                     Image.SCALE_DEFAULT);
-        player.topRotation = (int) Math.toDegrees(Math.atan2(getMousePosition().y - (player.y * 2 + size * 1.5) / 2,
-                getMousePosition().x - (player.x * 2 + size * 1.5) / 2)) + 90;
+        player.topRotation = (int) Math.toDegrees(Math.atan2(getMouseY() - (player.y * 2 + size * 1.5) / 2,
+                getMouseX() - (player.x * 2 + size * 1.5) / 2)) + 90;
         player.rotateTop = rotateImage(player.top, player.topRotation).getScaledInstance((int) (size * 1.5),
                 (int) (size * 1.5),
                 Image.SCALE_DEFAULT);
-        player.move(dx, dy);
 
         for (int i = 0; i < tanks.size(); i++) {
             Tank t = tanks.get(i);
 
-            //Bullet collisions
+            t.move(t.dx, t.dy);
+
+            // Bullet collisions
             for (int ii = 0; ii < t.bullets.size(); ii++) {
                 Bullet b = t.bullets.get(ii);
                 b.move();
@@ -471,16 +511,26 @@ public class Main extends JFrame implements ActionListener {
                     if (b.intersects(t2)) {
                         t.bullets.remove(b);
                         tanks.remove(t2);
-                            t2.x = random.nextInt(size, size * grid[0].length - size * 2);
-                            t2.y = random.nextInt(size, size * grid.length - size * 2);
-                        if(t2 == player) score = 0;
-                        else score++;
-                        switch(score){
-                            case 1: updateBackground(grid2); break;
-                            case 2: updateBackground(grid3); break;
-                            case 3: break;
-                            case 4: updateBackground(grid4); break;
-                            case 5: break;
+                        t2.x = random.nextInt(size, size * grid[0].length - size * 2);
+                        t2.y = random.nextInt(size, size * grid.length - size * 2);
+                        if (t2 == player)
+                            score = 0;
+                        else
+                            score++;
+                        switch (score) {
+                            case 1:
+                                updateBackground(grid2);
+                                break;
+                            case 2:
+                                updateBackground(grid3);
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                updateBackground(grid4);
+                                break;
+                            case 5:
+                                break;
                         }
                     }
                     for (int iv = 0; iv < t2.bullets.size(); iv++) {
@@ -492,7 +542,7 @@ public class Main extends JFrame implements ActionListener {
                     }
                 }
             }
-           
+
             // wall collisions
             for (Wall w : walls) {
                 if (w.intersects(t)) {
@@ -510,7 +560,6 @@ public class Main extends JFrame implements ActionListener {
                     }
                 }
 
-                
                 for (int ii = 0; ii < t.bullets.size(); ii++) {
                     Bullet b = t.bullets.get(ii);
                     if (b.intersects(w) && w.type != H) {
@@ -531,7 +580,7 @@ public class Main extends JFrame implements ActionListener {
                 }
             }
 
-            //Enemy AI
+            // Enemy AI
             if (t.type == E) {
                 t.topRotation = (int) Math.toDegrees(Math.atan2(((player.y * 2 + size) / 2) - ((t.y * 2 + size) / 2),
                         ((player.x * 2 + size) / 2) - ((t.x * 2 + size) / 2))) + 90;
@@ -548,40 +597,40 @@ public class Main extends JFrame implements ActionListener {
                             ((player.y * 2 + size) / 2 - ((t.y * 2 + size) / 2)) / length * 10);
                     t.cooldown = 50;
 
-                    int r = random.nextInt(4);
-                    int rr = random.nextInt(2);
+                    t.r = random.nextInt(4);
+                    t.rr = random.nextInt(2);
 
-                    if (r == 0) {
-                        if (rr == 0) {
-                            edx = -speed2;
-                            edy = -speed2;
+                    if (t.r == 0) {
+                        if (t.rr == 0) {
+                            t.dx = -speed2;
+                            t.dy = -speed2;
                             t.rotation = 315;
-                        } else if (rr == 1) {
-                            edx = speed2;
-                            edy = -speed2;
+                        } else if (t.rr == 1) {
+                            t.dx = speed2;
+                            t.dy = -speed2;
                             t.rotation = 45;
                         } else {
-                            edy = -speed;
+                            t.dy = -speed;
                             t.rotation = 0;
                         }
-                    } else if (r == 1) {
-                        if (rr == 0) {
-                            edx = -speed2;
-                            edy = speed2;
+                    } else if (t.r == 1) {
+                        if (t.rr == 0) {
+                            t.dx = -speed2;
+                            t.dy = speed2;
                             t.rotation = 225;
-                        } else if (rr == 1) {
-                            edx = speed2;
-                            edy = speed2;
+                        } else if (t.rr == 1) {
+                            t.dx = speed2;
+                            t.dy = speed2;
                             t.rotation = 135;
                         } else {
-                            edy = speed;
+                            t.dy = speed;
                             t.rotation = 180;
                         }
-                    } else if (r == 2) {
-                        edx = -speed;
+                    } else if (t.r == 2) {
+                        t.dx = -speed;
                         t.rotation = 270;
-                    } else if (r == 3) {
-                        edx = speed;
+                    } else if (t.r == 3) {
+                        t.dx = speed;
                         t.rotation = 90;
                     }
                     t.rotateTank = rotateImage(t.tank, t.rotation).getScaledInstance((int) (size * 1.5),
@@ -589,7 +638,6 @@ public class Main extends JFrame implements ActionListener {
                             Image.SCALE_DEFAULT);
 
                 }
-                t.move(edx, edy);
                 t.cooldown--;
             }
         }

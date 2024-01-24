@@ -11,6 +11,7 @@ public class Tank extends Rectangle {
     ArrayList<Bullet> bullets = new ArrayList<Bullet>();
     ArrayList<Bomb> bombs = new ArrayList<Bomb>();
     double x, y;
+    int r, rr;
     int type;
     int bounces;
     int max;
@@ -20,6 +21,7 @@ public class Tank extends Rectangle {
     BufferedImage tank, top;
     Image rotateTank, rotateTop;
     int gridx, gridy;
+    double dx, dy;
 
     Tank(int type, int x, int y, int width, int height, int bounces, int max, int maxBombs, int gridx, int gridy) {
         super(x + width, y, width, height);
