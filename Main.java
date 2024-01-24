@@ -385,14 +385,11 @@ public class Main extends JFrame implements ActionListener {
                         break;
                     case E:
                         g.drawImage(sand, x * size, y * size, null);
-                        tanks.add(new Tank(E, x * size, y * size, size, size, 1, 2, 0, x, y));
                         if (updateTanks = true) {
-                            for (Tank t : tanks) {
-                                if (t != player) {
-                                    t.x = x * size;
-                                    t.y = y * size;
-                                }
-                            }
+                            Tank tank = new Tank(E, x * size, y * size, size, size, 1, 2, 0, x, y);
+                            tanks.add(tank);
+                            tank.x = x * size;
+                            tank.y = y * size;
                         }
                         break;
                     default:
@@ -689,8 +686,8 @@ public class Main extends JFrame implements ActionListener {
                                     - (t.x * 2 + size) / 2)
                                     + ((player.y * 2 + size) / 2 - (t.y * 2 + size) / 2)
                                             * ((player.y * 2 + size) / 2 - (t.y * 2 + size) / 2));
-                    // t.shoot(((player.x * 2 + size) / 2 - ((t.x * 2 + size) / 2)) / length * 10,
-                    // ((player.y * 2 + size) / 2 - ((t.y * 2 + size) / 2)) / length * 10);
+                    t.shoot(((player.x * 2 + size) / 2 - ((t.x * 2 + size) / 2)) / length * 10,
+                            ((player.y * 2 + size) / 2 - ((t.y * 2 + size) / 2)) / length * 10);
                     t.cooldown = 50;
 
                     t.r = random.nextInt(4);
