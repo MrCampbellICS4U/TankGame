@@ -359,6 +359,10 @@ public class Main extends JFrame implements ActionListener {
                         g.drawImage(sand, x * size, y * size, null);
                         if (player == null)
                             player = new Tank(P, x * size, y * size, size, size, 1, 3, 3, x, y);
+                            else {
+                                player.x = x * size;
+                                player.y = y * size;
+                            }
                         tanks.add(0, player);
                         break;
                     case E:
