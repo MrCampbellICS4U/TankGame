@@ -138,7 +138,7 @@ public class Main extends JFrame implements ActionListener {
             { W, S, S, S, S, S, S, S, S, S, H, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, E, S, S, S, S, S, H, S, S, S, S, S, E, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
-            { W, S, S, H, H, H, H, H, S, S, S, S, H, H, H, H, H, S, S, S, W },
+            { W, S, S, H, H, H, H, H, S, S, S, S, S, H, H, H, H, H, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, W },
             { W, S, S, S, P, S, S, S, S, S, H, S, S, S, S, S, E, S, S, S, W },
@@ -457,18 +457,61 @@ public class Main extends JFrame implements ActionListener {
                             }
 
                             // Destroy tanks
+                            
                             for (int i = 0; i < tanks.size(); i++) {
                                 Tank t2 = tanks.get(i);
-
-                                if (t2.intersects(b)) {
-
+                                if (t2.intersects(b.explosion)) {
+                                if (t2 == player) {
+                                    score = 0;
+                                    updateBackground(grid, true);
+                                    for(int ii = 0; ii < player.bullets.size(); ii++){
+                                        player.bullets.remove(ii);
+                                    }
+                                }
+                                if(t2 != player){
                                     score++;
-                                    if (t2 == player) {
-                                        score = 0;
+                                }
+                                    switch (score) {
+                                        case 1:
+                                            updateBackground(getMap(), true);
+                                            break;
+                                        case 2:
+                                            updateBackground(getMap(), true);
+                                            break;
+                                        case 3:
+                                            break;
+                                        case 4:
+                                            updateBackground(getMap(), true);
+                                            break;
+                                        case 5:
+                                            break;
+                                        case 6:
+                                            updateBackground(getMap(), true);
+                                            break;
+                                        case 7:
+                                            break;
+                                        case 8:
+                                            break;
+                                        case 9:
+                                            updateBackground(getMap(), true);
+                                            break;
+                                        case 10:
+                                            break;
+                                        case 11:
+                                            break;
+                                        case 12:
+                                            updateBackground(getMap(), true);
+                                            break;
                                     }
                                     updateBackground(getMap(score), true);
                                 }
                             }
+                        }
+                        
+
+                        else if (b.bombTick == 736) {
+                            bombx = 0;
+                            bomby = 0;
                         }
                     }
                     g.drawRect((int) b.getX(), (int) b.getY(), b.width, b.height);
@@ -554,11 +597,61 @@ public class Main extends JFrame implements ActionListener {
                         tanks.remove(t2);
                         if (t2 == player) {
                             score = 0;
-                            updateBackground(grid, true);
-                        } else {
+                            for(int v = 0; v < player.bullets.size(); v++){
+                                player.bullets.remove(v);
+                            }
+                            updateBackground(grid, false);
+                        } else
                             score++;
-                            if (getMap(score - 1) != getMap(score))
-                                updateBackground(getMap(score), true);
+                        switch (score) {
+                            case 1:
+                                for(int v = 0; v < player.bullets.size(); v++){
+                                    player.bullets.remove(v);
+                                }
+                                updateBackground(getMap(), true);
+                                break;
+                            case 2:
+                                for(int v = 0; v < player.bullets.size(); v++){
+                                    player.bullets.remove(v);
+                                }
+                                updateBackground(getMap(), true);
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                for(int v = 0; v < player.bullets.size(); v++){
+                                    player.bullets.remove(v);
+                                }
+                                updateBackground(getMap(), true);
+                                break;
+                            case 5:
+                                break;
+                            case 6:
+                                for(int v = 0; v < player.bullets.size(); v++){
+                                    player.bullets.remove(v);
+                                }
+                                updateBackground(getMap(), true);
+                                break;
+                            case 7:
+                                break;
+                            case 8:
+                                break;
+                            case 9:
+                                for(int v = 0; v < player.bullets.size(); v++){
+                                    player.bullets.remove(v);
+                                }
+                                updateBackground(getMap(), true);
+                                break;
+                            case 10:
+                                break;
+                            case 11:
+                                break;
+                            case 12:
+                                for(int v = 0; v < player.bullets.size(); v++){
+                                    player.bullets.remove(v);
+                                }
+                                updateBackground(getMap(), true);
+                                break;
                         }
                     }
                     for (int iv = 0; iv < t2.bullets.size(); iv++) {
