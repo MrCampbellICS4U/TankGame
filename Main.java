@@ -385,9 +385,9 @@ public class Main extends JFrame implements ActionListener {
                         break;
                     case P:
                         g.drawImage(sand, x * size, y * size, null);
-                        if (player == null)
+                        if (updateTanks == true) {
+                            if (player == null)
                             player = new Tank(P, x * size, y * size, size, size, 1, 3, 3, x, y);
-                        else if (updateTanks = true) {
                             player.x = x * size;
                             player.y = y * size;
                         }
@@ -395,7 +395,7 @@ public class Main extends JFrame implements ActionListener {
                         break;
                     case E:
                         g.drawImage(sand, x * size, y * size, null);
-                        if (updateTanks = true) {
+                        if (updateTanks == true) {
                             Tank tank = new Tank(E, x * size, y * size, size, size, 1, 2, 0, x, y);
                             tanks.add(tank);
                             tank.x = x * size;
@@ -423,34 +423,34 @@ public class Main extends JFrame implements ActionListener {
             for (Tank t : tanks) {
                 for (Bomb b : t.bombs) {
                     b.bombTick++;
-                    if (b.bombTick < 300)
+                    if (b.bombTick < 100)
                         g.drawImage(bomb, (int) b.x - size / 4, (int) b.y - size / 4, null);
-                    else if (b.bombTick < 500) {
+                    else if (b.bombTick < 300) {
                         if (b.bombTick / 25 % 2 == 0)
                             g.drawImage(bombred, (int) b.x - size / 4, (int) b.y - size / 4, null);
                         else
                             g.drawImage(bomb, (int) b.x - size / 4, (int) b.y - size / 4, null);
                     } else {
-                        if (b.bombTick <= 505)
+                        if (b.bombTick <= 305)
                             g.drawImage(explosion1, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 510)
+                        else if (b.bombTick <= 310)
                             g.drawImage(explosion2, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 515)
+                        else if (b.bombTick <= 315)
                             g.drawImage(explosion3, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 520)
+                        else if (b.bombTick <= 320)
                             g.drawImage(explosion4, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 525)
+                        else if (b.bombTick <= 325)
                             g.drawImage(explosion5, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 530)
+                        else if (b.bombTick <= 330)
                             g.drawImage(explosion6, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
-                        else if (b.bombTick <= 535) {
+                        else if (b.bombTick <= 335) {
                             g.drawImage(explosion7, (int) b.x - size * 3 / 2, (int) b.y - size * 3 / 2, null);
                             // Destroy cracked walls
                             for (int i = 0; i < walls.size(); i++) {
                                 Wall w = walls.get(i);
                                 if (w.intersects(b.explosion) && w.type == C) {
                                     getMap()[w.gridy][w.gridx] = S;
-                                    w.type = S;
+                                    walls.remove(w);
                                     updateBackground(getMap(), false);
                                 }
                             }
@@ -458,44 +458,14 @@ public class Main extends JFrame implements ActionListener {
                             // Destroy tanks
                             for (int i = 0; i < tanks.size(); i++) {
                                 Tank t2 = tanks.get(i);
-                                if (t2 == player) {
-                                    score = 0;
-                                    updateBackground(grid, true);
-                                }
+                                
                                 if (t2.intersects(b.explosion)) {
-                                    score++;
-                                    switch (score) {
-                                        case 1:
-                                            updateBackground(getMap(), true);
-                                            break;
-                                        case 2:
-                                            updateBackground(getMap(), true);
-                                            break;
-                                        case 3:
-                                            break;
-                                        case 4:
-                                            updateBackground(getMap(), true);
-                                            break;
-                                        case 5:
-                                            break;
-                                        case 6:
-                                            updateBackground(getMap(), true);
-                                            break;
-                                        case 7:
-                                            break;
-                                        case 8:
-                                            break;
-                                        case 9:
-                                            updateBackground(getMap(), true);
-                                            break;
-                                        case 10:
-                                            break;
-                                        case 11:
-                                            break;
-                                        case 12:
-                                            updateBackground(getMap(), true);
-                                            break;
+                                    
+                                score++;
+                                if (t2 == player) {
+                                        score = 0;
                                     }
+                                    updateBackground(getMap(), true);
                                 }
                             }
                         }
