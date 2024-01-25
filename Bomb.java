@@ -3,17 +3,15 @@
 import java.awt.Rectangle;
 
 public class Bomb extends Rectangle {
-    Rectangle explosion;
-    double x, y, width, height;
+    double x, y;
     int bombTick;
     Tank tank;
 
     Bomb(double x, double y, Tank tank) {
+        super((int) (x - Main.size * 1.5), (int) (y - Main.size * 1.5), Main.size * 3, Main.size * 3);
         bombTick = 0;
         this.x = x;
         this.y = y;
         this.tank = tank;
-        explosion = new Rectangle((int) (x - Main.size * 3 / 2), (int) (y - Main.size * 3.2), Main.size * 3,
-                Main.size * 3);
     }
 }
