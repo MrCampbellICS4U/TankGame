@@ -186,7 +186,7 @@ public class Main extends JFrame implements ActionListener {
     }
 
     // Rotate Images
-    public static BufferedImage rotateImage(BufferedImage image, int n) { // n rotation in radians
+    public static BufferedImage rotateImage(BufferedImage image, int n) { // n rotation in degrees
         double rotationRequired = Math.toRadians(n);
         double locationX = image.getWidth() / 2;
         double locationY = image.getHeight() / 2;
