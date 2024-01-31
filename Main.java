@@ -186,15 +186,14 @@ public class Main extends JFrame implements ActionListener {
     }
 
     // Rotate Images
-    public static BufferedImage rotateImage(BufferedImage imag, int n) { // n rotation in radians
-
+    public static BufferedImage rotateImage(BufferedImage image, int n) { // n rotation in degrees
         double rotationRequired = Math.toRadians(n);
-        double locationX = imag.getWidth() / 2;
-        double locationY = imag.getHeight() / 2;
+        double locationX = image.getWidth() / 2;
+        double locationY = image.getHeight() / 2;
         AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        BufferedImage newImage = new BufferedImage(imag.getWidth(), imag.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        op.filter(imag, newImage);
+        BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        op.filter(image, newImage);
         return (newImage);
     }
 
